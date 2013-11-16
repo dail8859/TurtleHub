@@ -36,6 +36,7 @@ namespace TurtleHub
         private List<TicketItem> tickets = new List<TicketItem>();
         private readonly List<TicketItem> _ticketsAffected = new List<TicketItem>();
         private readonly string repo;
+        private string etag = "";
 
         public IssueBrowserDialog(string parameters)
         {
@@ -49,27 +50,51 @@ namespace TurtleHub
         public void StartTicketRequest()
         {
             HttpWebRequest webRequest = (HttpWebRequest) WebRequest.Create("https://api.github.com/repos/" + repo + "/issues");
+
+            webRequest.UserAgent = "TurtleHub"; // per GitHub's documentation
+
+            // Use conditional requests if we stored the etag from a previous request
+            if (etag.Length > 0) webRequest.Headers.Add(HttpRequestHeader.IfNoneMatch, etag);
+
             webRequest.BeginGetResponse(new AsyncCallback(FinishTicketRequest), webRequest);
         }
 
         public void FinishTicketRequest(IAsyncResult result)
         {
-            HttpWebResponse webResponse = (HttpWebResponse)((HttpWebRequest)result.AsyncState).EndGetResponse(result);
-
             try
             {
-                var obj = (SimpleJson.JsonArray) SimpleJson.SimpleJson.DeserializeObject(new StreamReader(webResponse.GetResponseStream(), true).ReadToEnd());
+                HttpWebResponse webResponse = (HttpWebResponse)((HttpWebRequest)result.AsyncState).EndGetResponse(result);
 
-                tickets.Clear();
-                foreach (SimpleJson.JsonObject item in obj)
+                etag = webResponse.GetResponseHeader("Etag");
+
+                if (webResponse.StatusCode == HttpStatusCode.OK)
                 {
-                    var num = (long) item["number"];
-                    var desc = (string) item["title"];
+                    var obj = (SimpleJson.JsonArray)SimpleJson.SimpleJson.DeserializeObject(new StreamReader(webResponse.GetResponseStream(), true).ReadToEnd());
 
-                    tickets.Add(new TicketItem((int)num, desc));
+                    tickets.Clear();
+                    listView1.Items.Clear();
+                    foreach (SimpleJson.JsonObject item in obj)
+                    {
+                        var num = (long)item["number"];
+                        var desc = (string)item["title"];
+
+                        tickets.Add(new TicketItem((int)num, desc));
+                    }
+
+                    MyIssuesForm_Load(null, null);
                 }
-
-                MyIssuesForm_Load(null, null);
+                else
+                {
+                    MessageBox.Show("Oh noes " + webResponse.StatusCode.ToString());
+                }
+            }
+            catch (WebException wex)
+            {
+                HttpWebResponse webResponse = (HttpWebResponse) wex.Response;
+                if (webResponse.StatusCode == HttpStatusCode.NotModified)
+                    MessageBox.Show("Got cache hit");
+                else
+                    throw;
             }
             catch (Exception ex)
             {
@@ -106,7 +131,7 @@ namespace TurtleHub
             listView1.Columns[2].Width = -1;
         }
 
-        private void okButton_Click(object sender, EventArgs e)
+        private void BtnOk_Click(object sender, EventArgs e)
         {
             foreach (ListViewItem lvi in listView1.Items)
             {
@@ -114,6 +139,11 @@ namespace TurtleHub
                 if (ticketItem != null && lvi.Checked)
                     _ticketsAffected.Add(ticketItem);
             }
+        }
+
+        private void BtnReset_Click(object sender, EventArgs e)
+        {
+            StartTicketRequest();
         }
     }
 }

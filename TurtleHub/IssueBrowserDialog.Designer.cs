@@ -46,35 +46,36 @@ namespace TurtleHub
         /// </summary>
         private void InitializeComponent()
         {
-            this.okButton = new System.Windows.Forms.Button();
-            this.cancelButton = new System.Windows.Forms.Button();
+            this.BtnOk = new System.Windows.Forms.Button();
+            this.BtnCancel = new System.Windows.Forms.Button();
             this.listView1 = new System.Windows.Forms.ListView();
+            this.BtnReset = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // okButton
+            // BtnOk
             // 
-            this.okButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.okButton.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.okButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.okButton.Location = new System.Drawing.Point(460, 200);
-            this.okButton.Name = "okButton";
-            this.okButton.Size = new System.Drawing.Size(75, 23);
-            this.okButton.TabIndex = 0;
-            this.okButton.Text = "OK";
-            this.okButton.UseVisualStyleBackColor = true;
-            this.okButton.Click += new System.EventHandler(this.okButton_Click);
+            this.BtnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.BtnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.BtnOk.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.BtnOk.Location = new System.Drawing.Point(460, 200);
+            this.BtnOk.Name = "BtnOk";
+            this.BtnOk.Size = new System.Drawing.Size(75, 23);
+            this.BtnOk.TabIndex = 0;
+            this.BtnOk.Text = "OK";
+            this.BtnOk.UseVisualStyleBackColor = true;
+            this.BtnOk.Click += new System.EventHandler(this.BtnOk_Click);
             // 
-            // cancelButton
+            // BtnCancel
             // 
-            this.cancelButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.cancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.cancelButton.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.cancelButton.Location = new System.Drawing.Point(541, 200);
-            this.cancelButton.Name = "cancelButton";
-            this.cancelButton.Size = new System.Drawing.Size(75, 23);
-            this.cancelButton.TabIndex = 1;
-            this.cancelButton.Text = "Cancel";
-            this.cancelButton.UseVisualStyleBackColor = true;
+            this.BtnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.BtnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.BtnCancel.FlatStyle = System.Windows.Forms.FlatStyle.System;
+            this.BtnCancel.Location = new System.Drawing.Point(541, 200);
+            this.BtnCancel.Name = "BtnCancel";
+            this.BtnCancel.Size = new System.Drawing.Size(75, 23);
+            this.BtnCancel.TabIndex = 1;
+            this.BtnCancel.Text = "Cancel";
+            this.BtnCancel.UseVisualStyleBackColor = true;
             // 
             // listView1
             // 
@@ -91,16 +92,27 @@ namespace TurtleHub
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
             // 
+            // BtnReset
+            // 
+            this.BtnReset.Location = new System.Drawing.Point(12, 200);
+            this.BtnReset.Name = "BtnReset";
+            this.BtnReset.Size = new System.Drawing.Size(77, 23);
+            this.BtnReset.TabIndex = 3;
+            this.BtnReset.Text = "Reload";
+            this.BtnReset.UseVisualStyleBackColor = true;
+            this.BtnReset.Click += new System.EventHandler(this.BtnReset_Click);
+            // 
             // IssueBrowserDialog
             // 
-            this.AcceptButton = this.okButton;
+            this.AcceptButton = this.BtnOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.CancelButton = this.cancelButton;
+            this.CancelButton = this.BtnCancel;
             this.ClientSize = new System.Drawing.Size(628, 235);
+            this.Controls.Add(this.BtnReset);
             this.Controls.Add(this.listView1);
-            this.Controls.Add(this.cancelButton);
-            this.Controls.Add(this.okButton);
+            this.Controls.Add(this.BtnCancel);
+            this.Controls.Add(this.BtnOk);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "IssueBrowserDialog";
@@ -115,8 +127,9 @@ namespace TurtleHub
 
         #endregion
 
-        private System.Windows.Forms.Button okButton;
-        private System.Windows.Forms.Button cancelButton;
+        private System.Windows.Forms.Button BtnOk;
+        private System.Windows.Forms.Button BtnCancel;
         private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.Button BtnReset;
     }
 }
