@@ -23,6 +23,7 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
 using Interop.BugTraqProvider;
+using System.Net;
 
 namespace TurtleHub
 {
@@ -96,7 +97,30 @@ namespace TurtleHub
 
         public bool ValidateParameters(IntPtr hParentWnd, string parameters)
         {
-            // ensure username/repo exists
+            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create("https://api.github.com/repos/" + parameters);
+            webRequest.UserAgent = "TurtleHub"; // per GitHub's documentation
+            webRequest.Method = "HEAD"; // we only need the status
+
+            try
+            {
+                HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse();
+                if (webResponse.StatusCode == HttpStatusCode.OK)
+                    return true;
+            }
+            catch (WebException wex)
+            {
+                HttpWebResponse webResponse = (HttpWebResponse)wex.Response;
+                if (webResponse.StatusCode == HttpStatusCode.NotFound)
+                    MessageBox.Show(parameters + " does not exist.");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                return false;
+            }
+
+            
             return true;
         }
     }
