@@ -33,10 +33,10 @@ namespace TurtleHub
 {
     partial class IssueBrowserDialog : Form
     {
-        private List<TicketItem> tickets = new List<TicketItem>();
-        private readonly List<TicketItem> _ticketsAffected = new List<TicketItem>();
+        private List<IssueItem> issues = new List<IssueItem>();
+        private readonly List<IssueItem> _issuesAffected = new List<IssueItem>();
         private readonly string repo;
-        private string etag = "";
+        private string etag = ""; // For conditional requests
 
         public IssueBrowserDialog(string parameters)
         {
@@ -44,68 +44,89 @@ namespace TurtleHub
 
             repo = parameters;
 
-            StartTicketRequest();
+            StartIssuesRequest();
         }
 
-        public void StartTicketRequest()
+        public void StartIssuesRequest()
         {
             HttpWebRequest webRequest = (HttpWebRequest) WebRequest.Create("https://api.github.com/repos/" + repo + "/issues");
 
+            Logger.LogMessage("Sending Http request for list of issues for " + repo);
+
             webRequest.UserAgent = "TurtleHub"; // per GitHub's documentation
+            if (etag.Length > 0)
+            {
+                Logger.LogMessage("\tUsing etag: " + etag);
+                webRequest.Headers.Add(HttpRequestHeader.IfNoneMatch, etag);
+            }
 
-            // Use conditional requests if we stored the etag from a previous request
-            if (etag.Length > 0) webRequest.Headers.Add(HttpRequestHeader.IfNoneMatch, etag);
-
-            webRequest.BeginGetResponse(new AsyncCallback(FinishTicketRequest), webRequest);
+            webRequest.BeginGetResponse(new AsyncCallback(FinishIssueRequest), webRequest);
         }
 
-        public void FinishTicketRequest(IAsyncResult result)
+        public void FinishIssueRequest(IAsyncResult result)
         {
+            Logger.LogMessage("\tReceived Http response for list of issues");
+
             try
             {
                 HttpWebResponse webResponse = (HttpWebResponse)((HttpWebRequest)result.AsyncState).EndGetResponse(result);
 
                 etag = webResponse.GetResponseHeader("Etag");
 
+                Logger.LogMessage("\t\tReceived response " + webResponse.StatusCode.ToString());
+                Logger.LogMessage("\t\tHeader contained etag: " + etag);
+
                 if (webResponse.StatusCode == HttpStatusCode.OK)
                 {
                     var obj = (SimpleJson.JsonArray)SimpleJson.SimpleJson.DeserializeObject(new StreamReader(webResponse.GetResponseStream(), true).ReadToEnd());
 
-                    tickets.Clear();
+                    Logger.LogMessage("\t\tReceived " + obj.Count.ToString() + " issues");
+
+                    issues.Clear();
                     listView1.Items.Clear();
                     foreach (SimpleJson.JsonObject item in obj)
                     {
                         var num = (long)item["number"];
                         var desc = (string)item["title"];
 
-                        tickets.Add(new TicketItem((int)num, desc));
+                        issues.Add(new IssueItem((int)num, desc));
                     }
 
                     MyIssuesForm_Load(null, null);
                 }
                 else
                 {
-                    MessageBox.Show("Oh noes " + webResponse.StatusCode.ToString());
+                    Logger.LogMessage("\t\tUnexpected status code");
                 }
+
+                webResponse.Close();
             }
             catch (WebException wex)
             {
                 HttpWebResponse webResponse = (HttpWebResponse) wex.Response;
+
+                Logger.LogMessage("\t\tWebException: Received response " + webResponse.StatusCode.ToString());
+
                 if (webResponse.StatusCode == HttpStatusCode.NotModified)
-                    MessageBox.Show("Got cache hit");
+                    Logger.LogMessage("\t\tCache hit");
                 else
+                {
+                    Logger.LogMessage(wex.ToString());
+                    MessageBox.Show(wex.ToString());
                     throw;
+                }
             }
             catch (Exception ex)
             {
+                Logger.LogMessage(ex.ToString());
                 MessageBox.Show(ex.ToString());
                 throw;
             }
         }
 
-        public IEnumerable<TicketItem> TicketsFixed
+        public IEnumerable<IssueItem> IssuesFixed
         {
-            get { return _ticketsAffected; }
+            get { return _issuesAffected; }
         }
 
         private void MyIssuesForm_Load(object sender, EventArgs e)
@@ -115,13 +136,13 @@ namespace TurtleHub
             listView1.Columns.Add("#");
             listView1.Columns.Add("Summary");
 
-            foreach(TicketItem ticketItem in tickets)
+            foreach(IssueItem issueItem in issues)
             {
                 ListViewItem lvi = new ListViewItem();
                 lvi.Text = "";
-                lvi.SubItems.Add(ticketItem.Number.ToString());
-                lvi.SubItems.Add(ticketItem.Summary);
-                lvi.Tag = ticketItem;
+                lvi.SubItems.Add(issueItem.Number.ToString());
+                lvi.SubItems.Add(issueItem.Summary);
+                lvi.Tag = issueItem;
 
                 listView1.Items.Add(lvi);
             }
@@ -135,15 +156,16 @@ namespace TurtleHub
         {
             foreach (ListViewItem lvi in listView1.Items)
             {
-                TicketItem ticketItem = lvi.Tag as TicketItem;
-                if (ticketItem != null && lvi.Checked)
-                    _ticketsAffected.Add(ticketItem);
+                IssueItem issueItem = lvi.Tag as IssueItem;
+                if (issueItem != null && lvi.Checked)
+                    _issuesAffected.Add(issueItem);
             }
         }
 
-        private void BtnReset_Click(object sender, EventArgs e)
+        private void BtnReload_Click(object sender, EventArgs e)
         {
-            StartTicketRequest();
+            Logger.LogMessage("Reload issues");
+            StartIssuesRequest();
         }
     }
 }

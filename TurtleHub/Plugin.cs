@@ -21,9 +21,9 @@ using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
+using System.Net;
 using Microsoft.Win32;
 using Interop.BugTraqProvider;
-using System.Net;
 
 namespace TurtleHub
 {
@@ -59,9 +59,9 @@ namespace TurtleHub
                 if (originalMessage.Length != 0 && !originalMessage.EndsWith("\n"))
                     result.AppendLine();
 
-                foreach (TicketItem ticket in form.TicketsFixed)
+                foreach (IssueItem issue in form.IssuesFixed)
                 {
-                    result.AppendFormat("Fixed #{0}: {1}", ticket.Number, ticket.Summary);
+                    result.AppendFormat("Fixed #{0}: {1}", issue.Number, issue.Summary);
                     result.AppendLine();
                 }
 
@@ -101,27 +101,41 @@ namespace TurtleHub
             webRequest.UserAgent = "TurtleHub"; // per GitHub's documentation
             webRequest.Method = "HEAD"; // we only need the status
 
+            Logger.LogMessage("Sending Http request to validate " + parameters);
+
             try
             {
                 HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse();
-                if (webResponse.StatusCode == HttpStatusCode.OK)
-                    return true;
+
+                Logger.LogMessage("\tReceived response " + webResponse.StatusCode.ToString());
+
+                if (webResponse.StatusCode == HttpStatusCode.OK) Logger.LogMessage("\tRepository found");
+                else Logger.LogMessage("\tNot sure what happend but assume repository found");
+
+                webResponse.Close();
+
+                return true;
             }
             catch (WebException wex)
             {
                 HttpWebResponse webResponse = (HttpWebResponse)wex.Response;
-                if (webResponse.StatusCode == HttpStatusCode.NotFound)
-                    MessageBox.Show(parameters + " does not exist.");
+
+                Logger.LogMessage("\tWebException: Received response " + webResponse.StatusCode.ToString());
+
+                MessageBox.Show(parameters + " does not exist.");
+                if (webResponse.StatusCode == HttpStatusCode.NotFound) Logger.LogMessage("\tRepository does not exist");
+                else Logger.LogMessage("\tNot sure what happend");
+
+                webResponse.Close();
+
                 return false;
             }
             catch (Exception ex)
             {
+                Logger.LogMessage(ex.ToString());
                 MessageBox.Show(ex.ToString());
                 return false;
             }
-
-            
-            return true;
         }
     }
 }

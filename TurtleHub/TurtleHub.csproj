@@ -74,10 +74,11 @@
     <Compile Include="IssueBrowserDialog.Designer.cs">
       <DependentUpon>IssueBrowserDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="Logger.cs" />
     <Compile Include="Plugin.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SimpleJson.cs" />
-    <Compile Include="TicketItem.cs" />
+    <Compile Include="IssueItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="IssueBrowserDialog.resx">

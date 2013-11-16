@@ -49,7 +49,7 @@ namespace TurtleHub
             this.BtnOk = new System.Windows.Forms.Button();
             this.BtnCancel = new System.Windows.Forms.Button();
             this.listView1 = new System.Windows.Forms.ListView();
-            this.BtnReset = new System.Windows.Forms.Button();
+            this.BtnReload = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // BtnOk
@@ -92,15 +92,15 @@ namespace TurtleHub
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
             // 
-            // BtnReset
+            // BtnReload
             // 
-            this.BtnReset.Location = new System.Drawing.Point(12, 200);
-            this.BtnReset.Name = "BtnReset";
-            this.BtnReset.Size = new System.Drawing.Size(77, 23);
-            this.BtnReset.TabIndex = 3;
-            this.BtnReset.Text = "Reload";
-            this.BtnReset.UseVisualStyleBackColor = true;
-            this.BtnReset.Click += new System.EventHandler(this.BtnReset_Click);
+            this.BtnReload.Location = new System.Drawing.Point(12, 200);
+            this.BtnReload.Name = "BtnReload";
+            this.BtnReload.Size = new System.Drawing.Size(77, 23);
+            this.BtnReload.TabIndex = 3;
+            this.BtnReload.Text = "Reload";
+            this.BtnReload.UseVisualStyleBackColor = true;
+            this.BtnReload.Click += new System.EventHandler(this.BtnReload_Click);
             // 
             // IssueBrowserDialog
             // 
@@ -109,7 +109,7 @@ namespace TurtleHub
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.BtnCancel;
             this.ClientSize = new System.Drawing.Size(628, 235);
-            this.Controls.Add(this.BtnReset);
+            this.Controls.Add(this.BtnReload);
             this.Controls.Add(this.listView1);
             this.Controls.Add(this.BtnCancel);
             this.Controls.Add(this.BtnOk);
@@ -130,6 +130,6 @@ namespace TurtleHub
         private System.Windows.Forms.Button BtnOk;
         private System.Windows.Forms.Button BtnCancel;
         private System.Windows.Forms.ListView listView1;
-        private System.Windows.Forms.Button BtnReset;
+        private System.Windows.Forms.Button BtnReload;
     }
 }

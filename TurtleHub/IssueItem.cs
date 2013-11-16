@@ -18,25 +18,25 @@
 
 namespace TurtleHub
 {
-    internal class TicketItem
+    internal class IssueItem
     {
-        private readonly int _ticketNumber;
-        private readonly string _ticketSummary;
+        private readonly int _issueNumber;
+        private readonly string _issueSummary;
 
-        public TicketItem(int ticketNumber, string ticketSummary)
+        public IssueItem(int issueNumber, string issueSummary)
         {
-            _ticketNumber = ticketNumber;
-            _ticketSummary = ticketSummary;
+            _issueNumber = issueNumber;
+            _issueSummary = issueSummary;
         }
 
         public int Number
         {
-            get { return _ticketNumber; }
+            get { return _issueNumber; }
         }
 
         public string Summary
         {
-            get { return _ticketSummary; }
+            get { return _issueSummary; }
         }
     }
 }
