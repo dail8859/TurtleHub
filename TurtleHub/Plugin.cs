@@ -43,20 +43,14 @@ namespace TurtleHub
         public string GetCommitMessage2(IntPtr hParentWnd, string parameters, string commonURL, string commonRoot, string[] pathList,
             string originalMessage, string bugID, out string bugIDOut, out string[] revPropNames, out string[] revPropValues)
         {
+            // Don't know what these do, they were copied from Gurtle
+            revPropNames = new string[0];
+            revPropValues = new string[0];
+            bugIDOut = bugID;
+
             try
             {
-                // TODO: get list of issues from github
-                List<TicketItem> tickets = new List<TicketItem>();
-                tickets.Add(new TicketItem(12, "Service doesn't start on Windows Vista"));
-                tickets.Add(new TicketItem(19, "About box doesn't render correctly in large fonts mode"));
-                tickets.Add(new TicketItem(21, "Only a test"));
-
-                // Don't know what these do, they were copied from Gurtle
-                revPropNames = new string[0];
-                revPropValues = new string[0];
-                bugIDOut = bugID;
-
-                IssueBrowserDialog form = new IssueBrowserDialog(tickets);
+                IssueBrowserDialog form = new IssueBrowserDialog(parameters);
                 if (form.ShowDialog() != DialogResult.OK)
                     return originalMessage;
 

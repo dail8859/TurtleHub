@@ -26,18 +26,56 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.Xml;
+using System.Net;
+using System.IO;
 
 namespace TurtleHub
 {
     partial class IssueBrowserDialog : Form
     {
-        private readonly IEnumerable<TicketItem> _tickets;
+        private List<TicketItem> tickets = new List<TicketItem>();
         private readonly List<TicketItem> _ticketsAffected = new List<TicketItem>();
+        private readonly string repo;
 
-        public IssueBrowserDialog(IEnumerable<TicketItem> tickets)
+        public IssueBrowserDialog(string parameters)
         {
             InitializeComponent();
-            _tickets = tickets;
+
+            repo = parameters;
+
+            StartTicketRequest();
+        }
+
+        public void StartTicketRequest()
+        {
+            HttpWebRequest webRequest = (HttpWebRequest) WebRequest.Create("https://api.github.com/repos/" + repo + "/issues");
+            webRequest.BeginGetResponse(new AsyncCallback(FinishTicketRequest), webRequest);
+        }
+
+        public void FinishTicketRequest(IAsyncResult result)
+        {
+            HttpWebResponse webResponse = (HttpWebResponse)((HttpWebRequest)result.AsyncState).EndGetResponse(result);
+
+            try
+            {
+                var obj = (SimpleJson.JsonArray) SimpleJson.SimpleJson.DeserializeObject(new StreamReader(webResponse.GetResponseStream(), true).ReadToEnd());
+
+                tickets.Clear();
+                foreach (SimpleJson.JsonObject item in obj)
+                {
+                    var num = (long) item["number"];
+                    var desc = (string) item["title"];
+
+                    tickets.Add(new TicketItem((int)num, desc));
+                }
+
+                MyIssuesForm_Load(null, null);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.ToString());
+                throw;
+            }
         }
 
         public IEnumerable<TicketItem> TicketsFixed
@@ -47,11 +85,12 @@ namespace TurtleHub
 
         private void MyIssuesForm_Load(object sender, EventArgs e)
         {
+            listView1.Columns.Clear();
             listView1.Columns.Add("");
             listView1.Columns.Add("#");
             listView1.Columns.Add("Summary");
 
-            foreach(TicketItem ticketItem in _tickets)
+            foreach(TicketItem ticketItem in tickets)
             {
                 ListViewItem lvi = new ListViewItem();
                 lvi.Text = "";
