@@ -52,7 +52,7 @@ namespace TurtleHub
             try
             {
                 IssueBrowserDialog form = new IssueBrowserDialog(parameters);
-                if (form.ShowDialog() != DialogResult.OK)
+                if (form.ShowDialog(WindowHandleWrapper.TryCreate(hParentWnd)) != DialogResult.OK)
                     return originalMessage;
 
                 StringBuilder result = new StringBuilder(originalMessage);
@@ -91,8 +91,12 @@ namespace TurtleHub
 
         public string ShowOptionsDialog(IntPtr hParentWnd, string parameters)
         {
-            // Dialog to get username and repo
-            return "username/repo";
+            OptionsDialog form = new OptionsDialog(parameters);
+
+            if (form.ShowDialog(WindowHandleWrapper.TryCreate(hParentWnd)) != DialogResult.OK)
+                return parameters;
+
+            return form.TxtOwner.Text + '/' + form.TxtRepository.Text;
         }
 
         public bool ValidateParameters(IntPtr hParentWnd, string parameters)

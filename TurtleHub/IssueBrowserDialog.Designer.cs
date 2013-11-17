@@ -119,7 +119,7 @@ namespace TurtleHub
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "MyIssuesForm";
+            this.Text = "Issues";
             this.Load += new System.EventHandler(this.MyIssuesForm_Load);
             this.ResumeLayout(false);
 
