@@ -20,13 +20,22 @@ namespace TurtleHub
 {
     internal class IssueItem
     {
-        private readonly int _issueNumber;
-        private readonly string _issueSummary;
+        private readonly int _issueNumber = -1;
+        private readonly string _issueSummary = "";
+        private readonly string _openedBy = "";
+        private readonly string _assignedTo = "";
 
-        public IssueItem(int issueNumber, string issueSummary)
+        public IssueItem(SimpleJson.JsonObject obj)
         {
-            _issueNumber = issueNumber;
-            _issueSummary = issueSummary;
+            _issueNumber = (int)(long)obj["number"];
+            _issueSummary = (string)obj["title"];
+
+            var user = (SimpleJson.JsonObject)obj["user"];
+            _openedBy = (string)user["login"];
+
+            var assignee = (SimpleJson.JsonObject)obj["assignee"];
+            if (assignee != null)
+                _assignedTo = (string)assignee["login"];
         }
 
         public int Number
@@ -37,6 +46,16 @@ namespace TurtleHub
         public string Summary
         {
             get { return _issueSummary; }
+        }
+
+        public string OpenedBy
+        {
+            get { return _openedBy; }
+        }
+
+        public string AssignedTo
+        {
+            get { return _assignedTo; }
         }
     }
 }

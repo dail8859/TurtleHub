@@ -69,7 +69,7 @@ namespace TurtleHub
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show(ex.ToString(), "TurtleHub Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw;
             }
         }
@@ -126,7 +126,7 @@ namespace TurtleHub
 
                 Logger.LogMessage("\tWebException: Received response " + webResponse.StatusCode.ToString());
 
-                MessageBox.Show(parameters + " does not exist.");
+                MessageBox.Show(parameters + " does not exist.", "TurtleHub", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 if (webResponse.StatusCode == HttpStatusCode.NotFound) Logger.LogMessage("\tRepository does not exist");
                 else Logger.LogMessage("\tNot sure what happend");
 
@@ -137,7 +137,7 @@ namespace TurtleHub
             catch (Exception ex)
             {
                 Logger.LogMessage(ex.ToString());
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show(ex.ToString(), "TurtleHub Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
         }

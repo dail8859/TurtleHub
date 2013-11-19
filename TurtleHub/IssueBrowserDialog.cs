@@ -78,19 +78,14 @@ namespace TurtleHub
 
                 if (webResponse.StatusCode == HttpStatusCode.OK)
                 {
-                    var obj = (SimpleJson.JsonArray)SimpleJson.SimpleJson.DeserializeObject(new StreamReader(webResponse.GetResponseStream(), true).ReadToEnd());
+                    var root = (SimpleJson.JsonArray)SimpleJson.SimpleJson.DeserializeObject(new StreamReader(webResponse.GetResponseStream(), true).ReadToEnd());
 
-                    Logger.LogMessage("\t\tReceived " + obj.Count.ToString() + " issues");
+                    Logger.LogMessage("\t\tReceived " + root.Count.ToString() + " issues");
 
                     issues.Clear();
                     listView1.Items.Clear();
-                    foreach (SimpleJson.JsonObject item in obj)
-                    {
-                        var num = (long)item["number"];
-                        var desc = (string)item["title"];
-
-                        issues.Add(new IssueItem((int)num, desc));
-                    }
+                    foreach (SimpleJson.JsonObject item in root)
+                        issues.Add(new IssueItem(item));
 
                     MyIssuesForm_Load(null, null);
                 }
@@ -112,14 +107,14 @@ namespace TurtleHub
                 else
                 {
                     Logger.LogMessage(wex.ToString());
-                    MessageBox.Show(wex.ToString());
+                    MessageBox.Show(wex.ToString(), "TurtleHub Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     throw;
                 }
             }
             catch (Exception ex)
             {
                 Logger.LogMessage(ex.ToString());
-                MessageBox.Show(ex.ToString());
+                MessageBox.Show(ex.ToString(), "TurtleHub Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 throw;
             }
         }
@@ -135,6 +130,8 @@ namespace TurtleHub
             listView1.Columns.Add("");
             listView1.Columns.Add("#");
             listView1.Columns.Add("Summary");
+            listView1.Columns.Add("Opened By");
+            listView1.Columns.Add("Assigned To");
 
             foreach(IssueItem issueItem in issues)
             {
@@ -142,6 +139,8 @@ namespace TurtleHub
                 lvi.Text = "";
                 lvi.SubItems.Add(issueItem.Number.ToString());
                 lvi.SubItems.Add(issueItem.Summary);
+                lvi.SubItems.Add(issueItem.OpenedBy);
+                lvi.SubItems.Add(issueItem.AssignedTo);
                 lvi.Tag = issueItem;
 
                 listView1.Items.Add(lvi);
@@ -150,6 +149,8 @@ namespace TurtleHub
             listView1.Columns[0].Width = -1;
             listView1.Columns[1].Width = -1;
             listView1.Columns[2].Width = -1;
+            listView1.Columns[3].Width = -1;
+            listView1.Columns[4].Width = -1;
         }
 
         private void BtnOk_Click(object sender, EventArgs e)
