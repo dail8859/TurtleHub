@@ -32,10 +32,10 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: ComVisible(false)]
+[assembly: ComVisible(true)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("74d36841-2d8c-4a3d-a557-85cda90481b7")]
 
-[assembly: AssemblyVersion("0.1")]
-[assembly: AssemblyFileVersion("0.1")]
+[assembly: AssemblyVersion("0.1.0.1")]
+[assembly: AssemblyFileVersion("0.1.0.1")]

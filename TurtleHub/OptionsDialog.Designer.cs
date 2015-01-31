@@ -39,9 +39,10 @@
             // BtnOk
             // 
             this.BtnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.BtnOk.Location = new System.Drawing.Point(103, 64);
+            this.BtnOk.Location = new System.Drawing.Point(137, 79);
+            this.BtnOk.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.BtnOk.Name = "BtnOk";
-            this.BtnOk.Size = new System.Drawing.Size(75, 23);
+            this.BtnOk.Size = new System.Drawing.Size(100, 28);
             this.BtnOk.TabIndex = 2;
             this.BtnOk.Text = "OK";
             this.BtnOk.UseVisualStyleBackColor = true;
@@ -49,9 +50,10 @@
             // BtnCancel
             // 
             this.BtnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.BtnCancel.Location = new System.Drawing.Point(184, 64);
+            this.BtnCancel.Location = new System.Drawing.Point(245, 79);
+            this.BtnCancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.BtnCancel.Name = "BtnCancel";
-            this.BtnCancel.Size = new System.Drawing.Size(75, 23);
+            this.BtnCancel.Size = new System.Drawing.Size(100, 28);
             this.BtnCancel.TabIndex = 3;
             this.BtnCancel.Text = "Cancel";
             this.BtnCancel.UseVisualStyleBackColor = true;
@@ -59,42 +61,46 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 15);
+            this.label1.Location = new System.Drawing.Point(16, 18);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(41, 13);
+            this.label1.Size = new System.Drawing.Size(53, 17);
             this.label1.TabIndex = 4;
             this.label1.Text = "Owner:";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 41);
+            this.label2.Location = new System.Drawing.Point(16, 50);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(60, 13);
+            this.label2.Size = new System.Drawing.Size(80, 17);
             this.label2.TabIndex = 5;
             this.label2.Text = "Repository:";
             // 
             // TxtOwner
             // 
-            this.TxtOwner.Location = new System.Drawing.Point(78, 12);
+            this.TxtOwner.Location = new System.Drawing.Point(104, 15);
+            this.TxtOwner.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.TxtOwner.Name = "TxtOwner";
-            this.TxtOwner.Size = new System.Drawing.Size(181, 20);
+            this.TxtOwner.Size = new System.Drawing.Size(240, 22);
             this.TxtOwner.TabIndex = 6;
             // 
             // TxtRepository
             // 
-            this.TxtRepository.Location = new System.Drawing.Point(78, 38);
+            this.TxtRepository.Location = new System.Drawing.Point(104, 47);
+            this.TxtRepository.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.TxtRepository.Name = "TxtRepository";
-            this.TxtRepository.Size = new System.Drawing.Size(181, 20);
+            this.TxtRepository.Size = new System.Drawing.Size(240, 22);
             this.TxtRepository.TabIndex = 7;
             // 
             // OptionsDialog
             // 
             this.AcceptButton = this.BtnOk;
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.BtnCancel;
-            this.ClientSize = new System.Drawing.Size(267, 94);
+            this.ClientSize = new System.Drawing.Size(356, 116);
             this.Controls.Add(this.TxtRepository);
             this.Controls.Add(this.TxtOwner);
             this.Controls.Add(this.label2);
@@ -102,6 +108,7 @@
             this.Controls.Add(this.BtnCancel);
             this.Controls.Add(this.BtnOk);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "OptionsDialog";
             this.Text = "Repository Settings";
             this.ResumeLayout(false);

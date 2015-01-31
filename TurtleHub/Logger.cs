@@ -28,11 +28,15 @@ namespace TurtleHub
     {
         public static void LogMessage(string message)
         {
-            using (StreamWriter w = File.AppendText("TurtleHub.log"))
+            using (StreamWriter w = File.AppendText(@"TurtleHub.log"))
             {
                 w.WriteLine(message);
                 w.Close();
             }
+        }
+        public static void LogMessageWithData(string message)
+        {
+            LogMessage(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ffff") + ":" + message);
         }
     }
 }
