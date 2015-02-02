@@ -43,10 +43,32 @@ namespace TurtleHub
             return "GetCommitMessage1";
         }
 
-        public string GetCommitMessage2(IntPtr hParentWnd, string parameters, string commonURL, string commonRoot, string[] pathList,
-            string originalMessage, string bugID, out string bugIDOut, out string[] revPropNames, out string[] revPropValues)
+        public string GetCommitMessage2(
+            IntPtr hParentWnd,
+            string parameters,
+            string commonURL,
+            string commonRoot,
+            string[] pathList,
+            string originalMessage,
+            string bugID,
+            out string bugIDOut,
+            out string[] revPropNames,
+            out string[] revPropValues)
         {
-            Logger.LogMessageWithData("GetCommitMessage2:" + parameters);
+            Logger.LogMessageWithData("DIC" + System.IO.Directory.GetCurrentDirectory());
+            Logger.LogMessageWithData("DIC-EXE" + System.IO.Path.GetDirectoryName(Application.ExecutablePath));
+            Logger.LogMessageWithData("DIC-ASS" + System.IO.Path.GetDirectoryName(typeof(Logger).Assembly.Location));
+            Logger.LogMessageWithData("GetCommitMessage2: parameters: " + parameters);
+            Logger.LogMessageWithData("GetCommitMessage2: parameters: " + parameters);
+            Logger.LogMessageWithData("GetCommitMessage2: commonURL: " + commonURL);
+            Logger.LogMessageWithData("GetCommitMessage2: commonRoot: " + commonRoot);
+            Logger.LogMessageWithData("GetCommitMessage2: originalMessage: " + originalMessage);
+            Logger.LogMessageWithData("GetCommitMessage2: bugID: " + bugID);
+            foreach (var path in pathList)
+            {
+                Logger.LogMessageWithData("GetCommitMessage2: pathList: " + path);
+            }
+
             // Don't know what these do, they were copied from Gurtle
             revPropNames = new string[0];
             revPropValues = new string[0];
