@@ -94,6 +94,7 @@ namespace TurtleHub
             // 
             // BtnReload
             // 
+            this.BtnReload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.BtnReload.Location = new System.Drawing.Point(12, 200);
             this.BtnReload.Name = "BtnReload";
             this.BtnReload.Size = new System.Drawing.Size(77, 23);
