@@ -30,8 +30,8 @@ SET NEWKEY=[HKEY_CLASSES_ROOT\CLSID\{B2C6EC0F-8742-4792-9FDC-10635D2C118B}\Imple
 
 ECHO %NEWKEY% >> TurtleHub.reg
 
-ECHO Back up registry. >> %LOGFILE% 2>&1
-ECHO Back up registry.
+ECHO Backing up registry... >> %LOGFILE% 2>&1
+ECHO Backing up registry...
 
 SET RGBKFILE=today-regbkfile.reg  >> %LOGFILE% 2>&1
 REGEDIT /E "%ROOTDIR%\..\TurtleHub\bin\x64\Debug\%RGBKFILE%" >> %LOGFILE% 2>&1
