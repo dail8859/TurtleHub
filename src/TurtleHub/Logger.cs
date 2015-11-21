@@ -39,7 +39,7 @@ namespace TurtleHub
         public static void LogMessageWithData(string message)
         {
 #if DEBUG
-            LogMessage(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ffff") + ":" + message);
+            LogMessage(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ffff") + ": " + message);
 #endif
         }
     }

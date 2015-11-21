@@ -26,20 +26,29 @@ using System.Windows.Forms;
 namespace TurtleHub
 {
     [ComVisible(true)]
+#if WIN64
     [Guid("B2C6EC0F-8742-4792-9FDC-10635D2C118B")]
+#else
+    [Guid("B2C6EC0F-8742-4792-9FDC-10635D2C118C")]
+#endif
     [ClassInterface(ClassInterfaceType.None)]
-    public class Plugin : IBugTraqProvider2
+    public sealed class Plugin : IBugTraqProvider2
     {
         public string GetLinkText(IntPtr hParentWnd, string parameters)
         {
-            Logger.LogMessageWithData("GetLinkText:" + parameters);
+            Logger.LogMessageWithData("GetLinkText: " + parameters);
+
             return "Select Issue";
         }
 
         public string GetCommitMessage(IntPtr hParentWnd, string parameters, string commonRoot, string[] pathList, string originalMessage)
         {
-            Logger.LogMessageWithData("GetCommitMessage:" + parameters);
-            MessageBox.Show("GetCommitMessage1");
+            Logger.LogMessageWithData("GetCommitMessage: " + parameters);
+            Logger.LogMessageWithData("GetCommitMessage: " + commonRoot);
+            foreach (var path in pathList) Logger.LogMessageWithData("GetCommitMessage: pathList: " + path);
+            Logger.LogMessageWithData("GetCommitMessage: " + originalMessage);
+
+            // This shouldn't ever get called
             return "GetCommitMessage1";
         }
 
@@ -55,20 +64,16 @@ namespace TurtleHub
             out string[] revPropNames,
             out string[] revPropValues)
         {
-            Logger.LogMessageWithData("DIC" + System.IO.Directory.GetCurrentDirectory());
-            Logger.LogMessageWithData("DIC-EXE" + System.IO.Path.GetDirectoryName(Application.ExecutablePath));
-            Logger.LogMessageWithData("DIC-ASS" + System.IO.Path.GetDirectoryName(typeof(Logger).Assembly.Location));
-            Logger.LogMessageWithData("GetCommitMessage2: parameters: " + parameters);
+            Logger.LogMessageWithData("GetCommitMessage2: DIC: " + System.IO.Directory.GetCurrentDirectory());
+            Logger.LogMessageWithData("GetCommitMessage2: DIC-EXE: " + System.IO.Path.GetDirectoryName(Application.ExecutablePath));
+            Logger.LogMessageWithData("GetCommitMessage2: DIC-ASS: " + System.IO.Path.GetDirectoryName(typeof(Logger).Assembly.Location));
             Logger.LogMessageWithData("GetCommitMessage2: parameters: " + parameters);
             Logger.LogMessageWithData("GetCommitMessage2: commonURL: " + commonURL);
             Logger.LogMessageWithData("GetCommitMessage2: commonRoot: " + commonRoot);
+            foreach (var path in pathList) Logger.LogMessageWithData("GetCommitMessage2: pathList: " + path);
             Logger.LogMessageWithData("GetCommitMessage2: originalMessage: " + originalMessage);
             Logger.LogMessageWithData("GetCommitMessage2: bugID: " + bugID);
-            foreach (var path in pathList)
-            {
-                Logger.LogMessageWithData("GetCommitMessage2: pathList: " + path);
-            }
-
+            
             // Don't know what these do, they were copied from Gurtle
             revPropNames = new string[0];
             revPropValues = new string[0];
@@ -86,6 +91,7 @@ namespace TurtleHub
 
                 foreach (IssueItem issue in form.IssuesFixed)
                 {
+                    // TODO: make this string configurable
                     result.AppendFormat("Fixed #{0}: {1}", issue.Number, issue.Summary);
                     result.AppendLine();
                 }
@@ -101,27 +107,36 @@ namespace TurtleHub
 
         public string CheckCommit(IntPtr hParentWnd, string parameters, string commonURL, string commonRoot, string[] pathList, string commitMessage)
         {
-            Logger.LogMessageWithData("CheckCommit:" + parameters);
+            Logger.LogMessageWithData("CheckCommit: " + parameters);
+            Logger.LogMessageWithData("CheckCommit: " + commonURL);
+            Logger.LogMessageWithData("CheckCommit: " + commonRoot);
+            foreach (var path in pathList) Logger.LogMessageWithData("CheckCommit: pathList: " + path);
+            Logger.LogMessageWithData("CheckCommit: " + commitMessage);
+
             return null;
         }
 
         public string OnCommitFinished(IntPtr hParentWnd, string commonRoot, string[] pathList, string logMessage, int revision)
         {
             Logger.LogMessageWithData("OnCommitFinished:" + commonRoot);
+            foreach (var path in pathList) Logger.LogMessageWithData("OnCommitFinished: pathList: " + path);
+            Logger.LogMessageWithData("OnCommitFinished: " + logMessage);
+            Logger.LogMessageWithData("OnCommitFinished: " + revision);
             return null;
         }
 
         public bool HasOptions()
         {
-            Logger.LogMessageWithData("HasOptions:");
+            Logger.LogMessageWithData("HasOptions");
+
             return true;
         }
 
         public string ShowOptionsDialog(IntPtr hParentWnd, string parameters)
         {
             Logger.LogMessageWithData("ShowOptionsDialog:" + parameters);
-            OptionsDialog form = new OptionsDialog(parameters);
 
+            OptionsDialog form = new OptionsDialog(parameters);
             if (form.ShowDialog(WindowHandleWrapper.TryCreate(hParentWnd)) != DialogResult.OK)
                 return parameters;
 

@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+	<?include VersionNumberInclude.wxi?>
+
+	<?if $(env.Platform)=x64 ?>
+	<?define Win64YesNo="yes" ?>
+	<?define UpgradeCode = "E573F04A-CFBF-45b4-9026-3CF8221E158B" ?>
+	<?define COMGuid = "{B2C6EC0F-8742-4792-9FDC-10635D2C118B}" ?>
+	<?define cf="CommonFiles64Folder" ?>
+	<?else ?>
+	<?define Win64YesNo="no" ?>
+	<?define UpgradeCode = "FE804E0B-B1F7-4cad-8C2A-DCE004D46C71" ?>
+	<?define COMGuid = "{B2C6EC0F-8742-4792-9FDC-10635D2C118C}" ?>
+	<?define cf="CommonFilesFolder" ?>
+	<?endif ?>
+
+	<Product UpgradeCode="$(var.UpgradeCode)"
+		Name='TurtleHub $(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion) ($(env.Platform))'
+		Id='*' Language='1033' Codepage='1252'
+		Version='$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion)'
+		Manufacturer='TurtleHub'>
+
+	<Package Id='*' Keywords='Installer'
+		Description="IBugTraqProvider for Github"
+		Comments='http://github.com/dail8859/TurtleHub' Manufacturer='TurtleHub'
+		InstallerVersion='200' Languages='1033' Compressed='yes' SummaryCodepage='1252'
+		Platform='$(env.Platform)' />
+
+	<Icon Id="icon.ico" SourceFile="../../logos/TurtleHub.ico"/>
+	<Property Id="ARPPRODUCTICON" Value="icon.ico" />
+
+	<Upgrade Id="$(var.UpgradeCode)" >
+		<!-- flag is set if the install will trigger an upgrade of an existing install -->
+		<UpgradeVersion Property="PREVIOUSVERSIONSINSTALLED" Maximum="$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion)" IncludeMaximum="no" />
+	</Upgrade>
+
+	<Media Id='1' Cabinet='TurtleHub.cab' EmbedCab='yes' />
+	<Property Id="ALLUSERS">1</Property>
+	<Condition Message='This application only runs on Windows XP and later.'>VersionNT &gt;= 501</Condition>
+
+	<Directory Id='TARGETDIR' Name='SourceDir'>
+		<Directory Id='$(var.cf)' Name='Common'>
+			<Directory Id='INSTALLDIR' Name='TurtleHub' />
+		</Directory>
+	</Directory>
+
+	<DirectoryRef Id='INSTALLDIR'>
+		<Component Id='CoreComponent' Guid='F1815014-6319-41E9-AA3B-0C4B5B8DFE9D' Win64='$(var.Win64YesNo)'>
+			<?if $(env.Platform)=x64 ?>
+			<File Id='TurtleHub.DLL' Name='TurtleHub.dll' DiskId='1' Source='../TurtleHub/bin/x64/Release/TurtleHub.dll' Vital='yes' />
+			<File Id='TurtleHub.PDB' Name='TurtleHub.pdb' DiskId='1' Source='../TurtleHub/bin/x64/Release/TurtleHub.pdb' Vital='no' />
+			<?else ?>
+			<File Id='TurtleHub.DLL' Name='TurtleHub.dll' DiskId='1' Source='../TurtleHub/bin/x86/Release/TurtleHub.dll' Vital='yes' />
+			<File Id='TurtleHub.PDB' Name='TurtleHub.pdb' DiskId='1' Source='../TurtleHub/bin/x86/Release/TurtleHub.pdb' Vital='no' />
+			<?endif ?>
+
+			<File Id='LICENSE' Name='LICENSE' DiskId='1' Source='../../LICENSE' Vital='yes' />
+
+			<RegistryKey Root="HKLM" Key="Software\Classes\TurtleHub.Plugin" Action="createAndRemoveOnUninstall" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\TurtleHub.Plugin" Value="TurtleHub $(var.MajorVersion).$(var.MinorVersion) (Github)" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\TurtleHub.Plugin\CLSID" Value="$(var.COMGuid)" Type="string" />
+
+			<RegistryKey Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)" Action="createAndRemoveOnUninstall" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)" Value="TurtleHub $(var.MajorVersion).$(var.MinorVersion) (Github)" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Value="mscoree.dll" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Name="ThreadingModel" Value="Both" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Name="Class" Value="TurtleHub.Plugin" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Name="Assembly" Value="TurtleHub, Version=$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0, Culture=neutral, PublicKeyToken=eac2a7a5a31ae656" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Name="RuntimeVersion" Value="v2.0.50727" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Name="CodeBase" Value="[INSTALLDIR]TurtleHub.dll" Type="string" />
+
+			<RegistryKey Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InprocServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0" Action="createAndRemoveOnUninstall" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0" Name="Class" Value="TurtleHub.Plugin" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0" Name="Assembly" Value="TurtleHub, Version=$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0, Culture=neutral, PublicKeyToken=eac2a7a5a31ae656" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0" Name="RuntimeVersion" Value="v2.0.50727" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0" Name="CodeBase" Value="[INSTALLDIR]TurtleHub.dll" Type="string" />
+
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\ProgId" Value="TurtleHub.Plugin" Type="string" />
+
+			<RegistryKey Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\Implemented Categories\{62C8FE65-4EBB-45E7-B440-6E39B2CDBF29}" Action="createAndRemoveOnUninstall" />
+			<RegistryKey Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\Implemented Categories\{3494FA92-B139-4730-9591-01135D5E7831}" Action="createAndRemoveOnUninstall" />
+		</Component>
+	</DirectoryRef>
+
+	<WixVariable Id="WixUILicenseRtf" Value="gpl-2.0.rtf" />
+	<WixVariable Id="WixUIBannerBmp" Value="Banner.jpg" />
+	<WixVariable Id="WixUIDialogBmp" Value="Dialog.jpg" />
+	<Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+	<UIRef Id="WixUI_InstallDir" />
+
+	<Feature Id='Complete' Title='TurtleHub' Description='The complete package.' Display='expand' Level='1' ConfigurableDirectory='INSTALLDIR'>
+		<Feature Id='CoreComponent' Title='Binaries' Description='The core binaries.' Level='1'>
+			<ComponentRef Id='CoreComponent' />
+		</Feature>
+	</Feature>
+
+	<InstallExecuteSequence>
+		<AppSearch Sequence="1"></AppSearch>
+		<LaunchConditions After="AppSearch" />
+		<RemoveExistingProducts After="InstallValidate"><![CDATA[PREVIOUSVERSIONSINSTALLED]]></RemoveExistingProducts>
+	</InstallExecuteSequence>
+	</Product>
+</Wix>
