@@ -56,23 +56,23 @@
 
 			<File Id='LICENSE' Name='LICENSE' DiskId='1' Source='../../LICENSE' Vital='yes' />
 
-			<RegistryKey Root="HKLM" Key="Software\Classes\TurtleHub.Plugin" Action="createAndRemoveOnUninstall" />
+			<RegistryKey   Root="HKLM" Key="Software\Classes\TurtleHub.Plugin" Action="createAndRemoveOnUninstall" />
 			<RegistryValue Root="HKLM" Key="Software\Classes\TurtleHub.Plugin" Value="TurtleHub $(var.MajorVersion).$(var.MinorVersion) (Github)" Type="string" />
 			<RegistryValue Root="HKLM" Key="Software\Classes\TurtleHub.Plugin\CLSID" Value="$(var.COMGuid)" Type="string" />
 
-			<RegistryKey Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)" Action="createAndRemoveOnUninstall" />
+			<RegistryKey   Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)" Action="createAndRemoveOnUninstall" />
 			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)" Value="TurtleHub $(var.MajorVersion).$(var.MinorVersion) (Github)" Type="string" />
 			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Value="mscoree.dll" Type="string" />
 			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Name="ThreadingModel" Value="Both" Type="string" />
 			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Name="Class" Value="TurtleHub.Plugin" Type="string" />
 			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Name="Assembly" Value="TurtleHub, Version=$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0, Culture=neutral, PublicKeyToken=eac2a7a5a31ae656" Type="string" />
-			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Name="RuntimeVersion" Value="v2.0.50727" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Name="RuntimeVersion" Value="v4.0.30319" Type="string" />
 			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Name="CodeBase" Value="[INSTALLDIR]TurtleHub.dll" Type="string" />
 
-			<RegistryKey Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InprocServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0" Action="createAndRemoveOnUninstall" />
+			<RegistryKey   Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0" Action="createAndRemoveOnUninstall" />
 			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0" Name="Class" Value="TurtleHub.Plugin" Type="string" />
 			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0" Name="Assembly" Value="TurtleHub, Version=$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0, Culture=neutral, PublicKeyToken=eac2a7a5a31ae656" Type="string" />
-			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0" Name="RuntimeVersion" Value="v2.0.50727" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0" Name="RuntimeVersion" Value="v4.0.30319" Type="string" />
 			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0" Name="CodeBase" Value="[INSTALLDIR]TurtleHub.dll" Type="string" />
 
 			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\ProgId" Value="TurtleHub.Plugin" Type="string" />

@@ -43,8 +43,10 @@ REM echo 	^<?define BuildVersion="%wcversion%" ?^> >> src\setup\VersionNumberInc
 echo ^</Include^> >> src\setup\VersionNumberInclude.wxi
 
 for %%i in (Debug Release) do (
-    "%SystemRoot%\Microsoft.NET\Framework\v3.5\msbuild" /p:Configuration=%%i /p:Platform=x86 src\TurtleHub.sln
-    "%SystemRoot%\Microsoft.NET\Framework\v3.5\msbuild" /p:Configuration=%%i /p:Platform=x64 src\TurtleHub.sln
+    "%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\msbuild" /p:Configuration=%%i /p:Platform=x86 /t:Clean src\TurtleHub.sln
+    "%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\msbuild" /p:Configuration=%%i /p:Platform=x64 /t:Clean src\TurtleHub.sln
+    "%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\msbuild" /p:Configuration=%%i /p:Platform=x86 src\TurtleHub.sln
+    "%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\msbuild" /p:Configuration=%%i /p:Platform=x64 src\TurtleHub.sln
 )
 
 :: build the installer
