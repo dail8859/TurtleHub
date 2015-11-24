@@ -44,6 +44,8 @@ namespace TurtleHub
 
             repo = parameters;
 
+            Text = string.Format(Text, repo);
+
             StartIssuesRequest();
         }
 
@@ -87,7 +89,18 @@ namespace TurtleHub
                     foreach (SimpleJson.JsonObject item in root)
                         issues.Add(new IssueItem(item));
 
-                    MyIssuesForm_Load(null, null);
+                    foreach (IssueItem issueItem in issues)
+                    {
+                        ListViewItem lvi = new ListViewItem();
+                        lvi.Text = "";
+                        lvi.SubItems.Add(issueItem.Number.ToString());
+                        lvi.SubItems.Add(issueItem.Summary);
+                        lvi.SubItems.Add(issueItem.OpenedBy);
+                        lvi.SubItems.Add(issueItem.AssignedTo);
+                        lvi.Tag = issueItem;
+
+                        listView1.Items.Add(lvi);
+                    }
                 }
                 else
                 {
@@ -95,6 +108,9 @@ namespace TurtleHub
                 }
 
                 webResponse.Close();
+
+                //updateNotifyIcon.Visible = true;
+                //updateNotifyIcon.ShowBalloonTip(5000);
             }
             catch (WebException wex)
             {
@@ -126,31 +142,6 @@ namespace TurtleHub
 
         private void MyIssuesForm_Load(object sender, EventArgs e)
         {
-            listView1.Columns.Clear();
-            listView1.Columns.Add("");
-            listView1.Columns.Add("#");
-            listView1.Columns.Add("Summary");
-            listView1.Columns.Add("Opened By");
-            listView1.Columns.Add("Assigned To");
-
-            foreach(IssueItem issueItem in issues)
-            {
-                ListViewItem lvi = new ListViewItem();
-                lvi.Text = "";
-                lvi.SubItems.Add(issueItem.Number.ToString());
-                lvi.SubItems.Add(issueItem.Summary);
-                lvi.SubItems.Add(issueItem.OpenedBy);
-                lvi.SubItems.Add(issueItem.AssignedTo);
-                lvi.Tag = issueItem;
-
-                listView1.Items.Add(lvi);
-            }
-
-            listView1.Columns[0].Width = -1;
-            listView1.Columns[1].Width = -1;
-            listView1.Columns[2].Width = -1;
-            listView1.Columns[3].Width = -1;
-            listView1.Columns[4].Width = -1;
         }
 
         private void BtnOk_Click(object sender, EventArgs e)
