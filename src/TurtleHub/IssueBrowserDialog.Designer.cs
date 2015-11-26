@@ -157,17 +157,18 @@ namespace TurtleHub
             // checkColumn
             // 
             this.checkColumn.Text = "";
-            this.checkColumn.Width = 17;
+            this.checkColumn.Width = 26;
             // 
             // numberColumn
             // 
             this.numberColumn.Text = "#";
-            this.numberColumn.Width = 34;
+            this.numberColumn.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.numberColumn.Width = 44;
             // 
             // summaryColumn
             // 
             this.summaryColumn.Text = "Summary";
-            this.summaryColumn.Width = 606;
+            this.summaryColumn.Width = 568;
             // 
             // openedbyColumn
             // 

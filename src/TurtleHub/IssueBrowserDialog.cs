@@ -63,11 +63,19 @@ namespace TurtleHub
             }
 
             webRequest.BeginGetResponse(new AsyncCallback(FinishIssueRequest), webRequest);
+
+            BtnReload.Enabled = false;
+            workStatus.Visible = true;
+            statusLabel.Text = "Downloading\x2026";
         }
 
         public void FinishIssueRequest(IAsyncResult result)
         {
             Logger.LogMessage("\tReceived Http response for list of issues");
+
+            BtnReload.Enabled = true;
+            workStatus.Visible = false;
+            statusLabel.Text = "Ready";
 
             try
             {
@@ -87,7 +95,11 @@ namespace TurtleHub
                     issues.Clear();
                     listView1.Items.Clear();
                     foreach (SimpleJson.JsonObject item in root)
+                    {
+                        if (item.ContainsKey("pull_request")) continue;
+
                         issues.Add(new IssueItem(item));
+                    }
 
                     foreach (IssueItem issueItem in issues)
                     {
