@@ -29,138 +29,89 @@ using System.Xml;
 using System.Net;
 using System.IO;
 
+using Octokit;
+
 namespace TurtleHub
 {
     partial class IssueBrowserDialog : Form
     {
-        private List<IssueItem> issues = new List<IssueItem>();
-        private readonly List<IssueItem> _issuesAffected = new List<IssueItem>();
-        private readonly string repo;
-        private string etag = ""; // For conditional requests
+        private List<Issue> _issuesAffected = new List<Issue>();
+        private IReadOnlyCollection<Issue> issues;
+        private Parameters parameters;
 
-        public IssueBrowserDialog(string parameters)
+        public IssueBrowserDialog(Parameters parameters)
         {
             InitializeComponent();
 
-            repo = parameters;
+            this.parameters = parameters;
 
-            Text = string.Format(Text, repo);
-
-            StartIssuesRequest();
+            Text = string.Format(Text, parameters.Repository);
         }
 
-        public void StartIssuesRequest()
+        private async void StartIssuesRequest()
         {
-            HttpWebRequest webRequest = (HttpWebRequest) WebRequest.Create("https://api.github.com/repos/" + repo + "/issues");
-
-            Logger.LogMessage("Sending Http request for list of issues for " + repo);
-
-            webRequest.UserAgent = "TurtleHub"; // per GitHub's documentation
-            if (etag.Length > 0)
-            {
-                Logger.LogMessage("\tUsing etag: " + etag);
-                webRequest.Headers.Add(HttpRequestHeader.IfNoneMatch, etag);
-            }
-
-            webRequest.BeginGetResponse(new AsyncCallback(FinishIssueRequest), webRequest);
-
             BtnReload.Enabled = false;
             workStatus.Visible = true;
             statusLabel.Text = "Downloading\x2026";
-        }
 
-        public void FinishIssueRequest(IAsyncResult result)
-        {
-            Logger.LogMessage("\tReceived Http response for list of issues");
+            var github = new GitHubClient(new ProductHeaderValue("TurtleHub"));
 
+#if DEBUG
+            // The logging normally takes care of this but ifdef'ing this out keeps it from doing an unneeded rate limit check
+            Logger.LogMessageWithData("Making Github request for issues");
+            var ratelimit = await github.Miscellaneous.GetRateLimits();
+            Logger.LogMessage(string.Format("\tRate limit: {0}/{1}", ratelimit.Resources.Core.Remaining.ToString(),ratelimit.Resources.Core.Limit.ToString()));
+#endif
+            issues = await github.Issue.GetAllForRepository(parameters.Username, parameters.Repository);
+
+            listView1.Items.Clear();
+            Logger.LogMessage("\tGot " + issues.Count().ToString() + " issues");
+
+            foreach(var issue in issues)
+            {
+                // Skip pull requests
+                if (issue.PullRequest != null) continue;
+
+                ListViewItem lvi = new ListViewItem();
+                lvi.Text = "";
+                lvi.SubItems.Add(issue.Number.ToString());
+                lvi.SubItems.Add(issue.Title);
+                lvi.SubItems.Add(issue.User.Name);
+                if (issue.Assignee != null) lvi.SubItems.Add(issue.Assignee.Name);
+                else lvi.SubItems.Add("");
+                lvi.Tag = issue;
+                listView1.Items.Add(lvi);
+            }
+#if DEBUG
+            ratelimit = await github.Miscellaneous.GetRateLimits();
+            Logger.LogMessage(string.Format("\tRate limit: {0}/{1}", ratelimit.Resources.Core.Remaining.ToString(), ratelimit.Resources.Core.Limit.ToString()));
+#endif
             BtnReload.Enabled = true;
             workStatus.Visible = false;
             statusLabel.Text = "Ready";
 
-            try
-            {
-                HttpWebResponse webResponse = (HttpWebResponse)((HttpWebRequest)result.AsyncState).EndGetResponse(result);
-
-                etag = webResponse.GetResponseHeader("Etag");
-
-                Logger.LogMessage("\t\tReceived response " + webResponse.StatusCode.ToString());
-                Logger.LogMessage("\t\tHeader contained etag: " + etag);
-
-                if (webResponse.StatusCode == HttpStatusCode.OK)
-                {
-                    var root = (SimpleJson.JsonArray)SimpleJson.SimpleJson.DeserializeObject(new StreamReader(webResponse.GetResponseStream(), true).ReadToEnd());
-
-                    Logger.LogMessage("\t\tReceived " + root.Count.ToString() + " issues");
-
-                    issues.Clear();
-                    listView1.Items.Clear();
-                    foreach (SimpleJson.JsonObject item in root)
-                    {
-                        if (item.ContainsKey("pull_request")) continue;
-
-                        issues.Add(new IssueItem(item));
-                    }
-
-                    foreach (IssueItem issueItem in issues)
-                    {
-                        ListViewItem lvi = new ListViewItem();
-                        lvi.Text = "";
-                        lvi.SubItems.Add(issueItem.Number.ToString());
-                        lvi.SubItems.Add(issueItem.Summary);
-                        lvi.SubItems.Add(issueItem.OpenedBy);
-                        lvi.SubItems.Add(issueItem.AssignedTo);
-                        lvi.Tag = issueItem;
-
-                        listView1.Items.Add(lvi);
-                    }
-                }
-                else
-                {
-                    Logger.LogMessage("\t\tUnexpected status code");
-                }
-
-                webResponse.Close();
-
-                //updateNotifyIcon.Visible = true;
-                //updateNotifyIcon.ShowBalloonTip(5000);
-            }
-            catch (WebException wex)
-            {
-                HttpWebResponse webResponse = (HttpWebResponse) wex.Response;
-
-                Logger.LogMessage("\t\tWebException: Received response " + webResponse.StatusCode.ToString());
-
-                if (webResponse.StatusCode == HttpStatusCode.NotModified)
-                    Logger.LogMessage("\t\tCache hit");
-                else
-                {
-                    Logger.LogMessage(wex.ToString());
-                    MessageBox.Show(wex.ToString(), "TurtleHub Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    throw;
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.LogMessage(ex.ToString());
-                MessageBox.Show(ex.ToString(), "TurtleHub Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                throw;
-            }
+            // Let's check to see if there is an update for TurtleHub
+            //var th = await github.Repository.Get("dail8859", "TurtleHub");
+            //var th = await github.Release.GetAll("dail8859", "TurtleHub");
+            //var latest = await github.Release.Get("dail8859", "TurtleHub", th[0].Id);
+            //var response = await client.Connection.Get<object>(new Uri(latestAsset[0].Url), new Dictionary<string, string>(), "application/octet-stream");
         }
 
-        public IEnumerable<IssueItem> IssuesFixed
+        public IReadOnlyCollection<Issue> IssuesFixed
         {
             get { return _issuesAffected; }
         }
 
         private void MyIssuesForm_Load(object sender, EventArgs e)
         {
+            StartIssuesRequest();
         }
 
         private void BtnOk_Click(object sender, EventArgs e)
         {
             foreach (ListViewItem lvi in listView1.Items)
             {
-                IssueItem issueItem = lvi.Tag as IssueItem;
+                Issue issueItem = lvi.Tag as Issue;
                 if (issueItem != null && lvi.Checked)
                     _issuesAffected.Add(issueItem);
             }

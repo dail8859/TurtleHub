@@ -49,9 +49,13 @@
 			<?if $(env.Platform)=x64 ?>
 			<File Id='TurtleHub.DLL' Name='TurtleHub.dll' DiskId='1' Source='../TurtleHub/bin/x64/Release/TurtleHub.dll' Vital='yes' />
 			<File Id='TurtleHub.PDB' Name='TurtleHub.pdb' DiskId='1' Source='../TurtleHub/bin/x64/Release/TurtleHub.pdb' Vital='no' />
+			<File Id='Octokit.DLL'   Name='Octokit.dll'   DiskId='1' Source='../TurtleHub/bin/x64/Release/Octokit.dll' Vital='yes' />
+			<File Id='Octokit.PDB'   Name='Octokit.pdb'   DiskId='1' Source='../TurtleHub/bin/x64/Release/Octokit.pdb' Vital='no' />
 			<?else ?>
 			<File Id='TurtleHub.DLL' Name='TurtleHub.dll' DiskId='1' Source='../TurtleHub/bin/x86/Release/TurtleHub.dll' Vital='yes' />
 			<File Id='TurtleHub.PDB' Name='TurtleHub.pdb' DiskId='1' Source='../TurtleHub/bin/x86/Release/TurtleHub.pdb' Vital='no' />
+			<File Id='Octokit.DLL'   Name='Octokit.dll'   DiskId='1' Source='../TurtleHub/bin/x86/Release/Octokit.dll' Vital='yes' />
+			<File Id='Octokit.PDB'   Name='Octokit.pdb'   DiskId='1' Source='../TurtleHub/bin/x86/Release/Octokit.pdb' Vital='no' />
 			<?endif ?>
 
 			<File Id='LICENSE' Name='LICENSE' DiskId='1' Source='../../LICENSE' Vital='yes' />
@@ -65,13 +69,13 @@
 			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Value="mscoree.dll" Type="string" />
 			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Name="ThreadingModel" Value="Both" Type="string" />
 			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Name="Class" Value="TurtleHub.Plugin" Type="string" />
-			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Name="Assembly" Value="TurtleHub, Version=$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0, Culture=neutral, PublicKeyToken=eac2a7a5a31ae656" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Name="Assembly" Value="TurtleHub, Version=$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0, Culture=neutral, PublicKeyToken=null" Type="string" />
 			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Name="RuntimeVersion" Value="v4.0.30319" Type="string" />
 			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Name="CodeBase" Value="[INSTALLDIR]TurtleHub.dll" Type="string" />
 
 			<RegistryKey   Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0" Action="createAndRemoveOnUninstall" />
 			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0" Name="Class" Value="TurtleHub.Plugin" Type="string" />
-			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0" Name="Assembly" Value="TurtleHub, Version=$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0, Culture=neutral, PublicKeyToken=eac2a7a5a31ae656" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0" Name="Assembly" Value="TurtleHub, Version=$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0, Culture=neutral, PublicKeyToken=null" Type="string" />
 			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0" Name="RuntimeVersion" Value="v4.0.30319" Type="string" />
 			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0" Name="CodeBase" Value="[INSTALLDIR]TurtleHub.dll" Type="string" />
 

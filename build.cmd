@@ -21,6 +21,14 @@ REM Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 pushd "%~dp0"
 SetLocal EnableDelayedExpansion
 
+:: Check if the NuGet package exists
+if not exist ".\src\packages\Octokit.0.16.0" (
+	echo The NuGet package for Octokit seems to be missing.
+	echo Open TurtleHub.sln and open the menu "Tools / NuGet Package Manager / Package Manager Console" and run:
+	echo ^> Install-Package Octokit
+	goto end
+)
+
 :: load the version numbers into variables
 for /F "delims=, tokens=1,2,3" %%i in (src\version.txt) do (
 	set majorversion=%%i
@@ -43,22 +51,24 @@ REM echo 	^<?define BuildVersion="%wcversion%" ?^> >> src\setup\VersionNumberInc
 echo ^</Include^> >> src\setup\VersionNumberInclude.wxi
 
 for %%i in (Debug Release) do (
-    "%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\msbuild" /p:Configuration=%%i /p:Platform=x86 /t:Clean src\TurtleHub.sln
-    "%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\msbuild" /p:Configuration=%%i /p:Platform=x64 /t:Clean src\TurtleHub.sln
-    "%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\msbuild" /p:Configuration=%%i /p:Platform=x86 src\TurtleHub.sln
-    "%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\msbuild" /p:Configuration=%%i /p:Platform=x64 src\TurtleHub.sln
+	"%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\msbuild" /p:Configuration=%%i /p:Platform=x86 /t:Clean src\TurtleHub.sln
+	"%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\msbuild" /p:Configuration=%%i /p:Platform=x64 /t:Clean src\TurtleHub.sln
+	"%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\msbuild" /p:Configuration=%%i /p:Platform=x86 src\TurtleHub.sln /p:PostBuildEvent=""
+	"%SystemRoot%\Microsoft.NET\Framework\v4.0.30319\msbuild" /p:Configuration=%%i /p:Platform=x64 src\TurtleHub.sln /p:PostBuildEvent=""
 )
 
 :: build the installer
 del bin\*.msi
 pushd src\Setup
+
+echo.
 for %%a in (x86 x64) do (
-    echo Building setup for %%a platform
-    set Platform=%%a
-    ..\..\tools\WiX\candle -nologo -out ..\..\bin\Setup-%%a.wixobj Setup.wxs 
-    ..\..\tools\WiX\light -nologo -sice:ICE08 -sice:ICE09 -sice:ICE32 -sice:ICE61 -out ..\..\bin\TurtleHub-%majorversion%.%minorversion%.%microversion%-%%a.msi ..\..\bin\Setup-%%a.wixobj -ext WixUIExtension -cultures:en-us
-    REM ..\..\tools\WiX\candle -nologo -out ..\..\bin\MergeModule-%%a.wixobj MergeModule.wxs 
-    REM ..\..\tools\WiX\light -nologo -sice:ICE08 -sice:ICE09 -sice:ICE32 -sice:ICE61 -out ..\..\bin\TurtleHub-%majorversion%.%minorversion%.%microversion%-%%a.msm ..\..\bin\MergeModule-%%a.wixobj
+	echo Building setup for %%a platform
+	set Platform=%%a
+	..\..\tools\WiX\candle -nologo -out ..\..\bin\Setup-%%a.wixobj Setup.wxs 
+	..\..\tools\WiX\light -nologo -sice:ICE08 -sice:ICE09 -sice:ICE32 -sice:ICE61 -out ..\..\bin\TurtleHub-%majorversion%.%minorversion%.%microversion%-%%a.msi ..\..\bin\Setup-%%a.wixobj -ext WixUIExtension -cultures:en-us
+	REM ..\..\tools\WiX\candle -nologo -out ..\..\bin\MergeModule-%%a.wixobj MergeModule.wxs 
+	REM ..\..\tools\WiX\light -nologo -sice:ICE08 -sice:ICE09 -sice:ICE32 -sice:ICE61 -out ..\..\bin\TurtleHub-%majorversion%.%minorversion%.%microversion%-%%a.msm ..\..\bin\MergeModule-%%a.wixobj
 )
 popd
 del bin\*.wixobj

@@ -27,104 +27,35 @@ using System.Windows.Forms;
 using System.Net;
 using System.IO;
 
+using Octokit;
+
 namespace TurtleHub
 {
     public partial class OptionsDialog : Form
     {
-        public OptionsDialog(string parameters)
+        public Parameters Params { get { return new Parameters(TxtOwner.Text, TxtRepository.Text); } }
+
+        public OptionsDialog(Parameters parameters)
         {
             InitializeComponent();
 
-            var ownerrepo = parameters.Split('/');
-            if (ownerrepo.Length == 2)
-            {
-                TxtOwner.Text = ownerrepo[0];
-                TxtRepository.Text = ownerrepo[1];
-            }
+            TxtOwner.Text = parameters.Username;
+            TxtRepository.Text = parameters.Repository;
         }
 
-        private void TxtRepository_Enter(object sender, EventArgs e)
-        {
-            StartRepoListRequest();
-        }
-
-        private void StartRepoListRequest()
+        private async void TxtRepository_Enter(object sender, EventArgs e)
         {
             String owner = TxtOwner.Text;
+            var github = new GitHubClient(new ProductHeaderValue("TurtleHub"));
+            var repos = await github.Repository.GetAllForUser(owner);
 
-            if (string.IsNullOrEmpty(owner))
-                return;
-
-            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create("https://api.github.com/users/" + owner + "/repos");
-
-            Logger.LogMessage("Sending Http request for list of repos owned by " + owner);
-
-            webRequest.UserAgent = "TurtleHub"; // per GitHub's documentation
-
-            webRequest.BeginGetResponse(new AsyncCallback(FinishRepoListRequest), webRequest);
-        }
-
-        private void FinishRepoListRequest(IAsyncResult result)
-        {
-            Logger.LogMessage("\tReceived Http response for list of repositories");
-
-            try
+            var repo_list = new AutoCompleteStringCollection();
+            foreach(var repo in repos)
             {
-                HttpWebResponse webResponse = (HttpWebResponse)((HttpWebRequest)result.AsyncState).EndGetResponse(result);
-                Logger.LogMessage("\t\tReceived response " + webResponse.StatusCode.ToString());
-
-                if (webResponse.StatusCode == HttpStatusCode.OK)
-                {
-                    var root = (SimpleJson.JsonArray)SimpleJson.SimpleJson.DeserializeObject(new StreamReader(webResponse.GetResponseStream(), true).ReadToEnd());
-
-                    Logger.LogMessage("\t\tReceived " + root.Count.ToString() + " repositories");
-
-                    var repos = new AutoCompleteStringCollection();
-                    
-                    foreach (SimpleJson.JsonObject item in root)
-                        repos.Add(item["name"].ToString());
-
-                    // Since this is a different thread, we have to call the BeginInvoke method
-                    TxtRepository.BeginInvoke((Action)delegate
-                    {
-                        TxtRepository.AutoCompleteCustomSource = repos;
-                    });
-                }
-                else
-                {
-                    Logger.LogMessage("\t\tUnexpected status code");
-                }
-
-                webResponse.Close();
+                repo_list.Add(repo.Name);
             }
-            catch (WebException wex)
-            {
-                HttpWebResponse webResponse = (HttpWebResponse)wex.Response;
 
-                Logger.LogMessage("\t\tWebException: Received response " + webResponse.StatusCode.ToString());
-
-                if (webResponse.StatusCode == HttpStatusCode.NotModified)
-                {
-                    // Should this ever happen?
-                    Logger.LogMessage("\t\tCache hit");
-                }
-                else if (webResponse.StatusCode == HttpStatusCode.NotFound)
-                {
-                    // This is ok for now
-                }
-                else
-                {
-                    Logger.LogMessage(wex.ToString());
-                    MessageBox.Show(wex.ToString(), "TurtleHub Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    throw;
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.LogMessage(ex.ToString());
-                MessageBox.Show(ex.ToString(), "TurtleHub Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                throw;
-            }
+            TxtRepository.AutoCompleteCustomSource = repo_list;
         }
     }
 }

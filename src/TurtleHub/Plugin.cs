@@ -23,6 +23,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
+using Octokit;
+
 namespace TurtleHub
 {
     [ComVisible(true)]
@@ -37,35 +39,24 @@ namespace TurtleHub
         public string GetLinkText(IntPtr hParentWnd, string parameters)
         {
             Logger.LogMessageWithData("GetLinkText: " + parameters);
-
             return "Select Issue";
         }
 
         public string GetCommitMessage(IntPtr hParentWnd, string parameters, string commonRoot, string[] pathList, string originalMessage)
         {
+            // This shouldn't ever get called
             Logger.LogMessageWithData("GetCommitMessage: " + parameters);
             Logger.LogMessageWithData("GetCommitMessage: " + commonRoot);
             foreach (var path in pathList) Logger.LogMessageWithData("GetCommitMessage: pathList: " + path);
             Logger.LogMessageWithData("GetCommitMessage: " + originalMessage);
-
-            // This shouldn't ever get called
             return "GetCommitMessage1";
         }
 
-        public string GetCommitMessage2(
-            IntPtr hParentWnd,
-            string parameters,
-            string commonURL,
-            string commonRoot,
-            string[] pathList,
-            string originalMessage,
-            string bugID,
-            out string bugIDOut,
-            out string[] revPropNames,
-            out string[] revPropValues)
+        public string GetCommitMessage2(IntPtr hParentWnd, string parameters, string commonURL, string commonRoot, string[] pathList,
+            string originalMessage, string bugID, out string bugIDOut, out string[] revPropNames, out string[] revPropValues)
         {
             Logger.LogMessageWithData("GetCommitMessage2: DIC: " + System.IO.Directory.GetCurrentDirectory());
-            Logger.LogMessageWithData("GetCommitMessage2: DIC-EXE: " + System.IO.Path.GetDirectoryName(Application.ExecutablePath));
+            Logger.LogMessageWithData("GetCommitMessage2: DIC-EXE: " + System.IO.Path.GetDirectoryName(System.Windows.Forms.Application.ExecutablePath));
             Logger.LogMessageWithData("GetCommitMessage2: DIC-ASS: " + System.IO.Path.GetDirectoryName(typeof(Logger).Assembly.Location));
             Logger.LogMessageWithData("GetCommitMessage2: parameters: " + parameters);
             Logger.LogMessageWithData("GetCommitMessage2: commonURL: " + commonURL);
@@ -81,7 +72,7 @@ namespace TurtleHub
 
             try
             {
-                IssueBrowserDialog form = new IssueBrowserDialog(parameters);
+                IssueBrowserDialog form = new IssueBrowserDialog(new Parameters(parameters));
                 if (form.ShowDialog(WindowHandleWrapper.TryCreate(hParentWnd)) != DialogResult.OK)
                     return originalMessage;
 
@@ -89,10 +80,10 @@ namespace TurtleHub
                 if (originalMessage.Length != 0 && !originalMessage.EndsWith("\n"))
                     result.AppendLine();
 
-                foreach (IssueItem issue in form.IssuesFixed)
+                foreach (Issue issue in form.IssuesFixed)
                 {
                     // TODO: make this string configurable
-                    result.AppendFormat("Fixed #{0}: {1}", issue.Number, issue.Summary);
+                    result.AppendFormat("Fixed #{0}: {1}", issue.Number, issue.Title);
                     result.AppendLine();
                 }
 
@@ -128,7 +119,6 @@ namespace TurtleHub
         public bool HasOptions()
         {
             Logger.LogMessageWithData("HasOptions");
-
             return true;
         }
 
@@ -136,18 +126,20 @@ namespace TurtleHub
         {
             Logger.LogMessageWithData("ShowOptionsDialog:" + parameters);
 
-            OptionsDialog form = new OptionsDialog(parameters);
-            if (form.ShowDialog(WindowHandleWrapper.TryCreate(hParentWnd)) != DialogResult.OK)
-                return parameters;
+            OptionsDialog form = new OptionsDialog(new Parameters(parameters));
+            if (form.ShowDialog(WindowHandleWrapper.TryCreate(hParentWnd)) == DialogResult.OK)
+                return form.Params.ToString();
 
-            return form.TxtOwner.Text + '/' + form.TxtRepository.Text;
+            // Else just return the original value
+            return parameters;
         }
 
         public bool ValidateParameters(IntPtr hParentWnd, string parameters)
         {
             Logger.LogMessageWithData("ValidateParameters:" + parameters);
+            Parameters p = new Parameters(parameters);
 
-            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create("https://api.github.com/repos/" + parameters);
+            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create("https://api.github.com/repos/" + p.Username + "/" + p.Repository);
             webRequest.UserAgent = "TurtleHub"; // per GitHub's documentation
             webRequest.Method = "HEAD"; // we only need the status
 
