@@ -73,11 +73,10 @@ namespace TurtleHub
                 if (issue.PullRequest != null) continue;
 
                 ListViewItem lvi = new ListViewItem();
-                lvi.Text = "";
-                lvi.SubItems.Add(issue.Number.ToString());
+                lvi.Text = issue.Number.ToString();
                 lvi.SubItems.Add(issue.Title);
-                lvi.SubItems.Add(issue.User.Name);
-                if (issue.Assignee != null) lvi.SubItems.Add(issue.Assignee.Name);
+                lvi.SubItems.Add(issue.User.Login);
+                if (issue.Assignee != null) lvi.SubItems.Add(issue.Assignee.Login);
                 else lvi.SubItems.Add("");
                 lvi.Tag = issue;
                 listView1.Items.Add(lvi);

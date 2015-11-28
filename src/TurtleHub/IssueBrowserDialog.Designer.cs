@@ -55,7 +55,6 @@ namespace TurtleHub
             this.BtnCancel = new System.Windows.Forms.Button();
             this.BtnReload = new System.Windows.Forms.Button();
             this.listView1 = new System.Windows.Forms.ListView();
-            this.checkColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.numberColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.summaryColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.openedbyColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -138,7 +137,6 @@ namespace TurtleHub
             | System.Windows.Forms.AnchorStyles.Right)));
             this.listView1.CheckBoxes = true;
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.checkColumn,
             this.numberColumn,
             this.summaryColumn,
             this.openedbyColumn,
@@ -154,11 +152,6 @@ namespace TurtleHub
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
             // 
-            // checkColumn
-            // 
-            this.checkColumn.Text = "";
-            this.checkColumn.Width = 26;
-            // 
             // numberColumn
             // 
             this.numberColumn.Text = "#";
@@ -168,7 +161,7 @@ namespace TurtleHub
             // summaryColumn
             // 
             this.summaryColumn.Text = "Summary";
-            this.summaryColumn.Width = 568;
+            this.summaryColumn.Width = 596;
             // 
             // openedbyColumn
             // 
@@ -226,7 +219,6 @@ namespace TurtleHub
         private System.Windows.Forms.ColumnHeader summaryColumn;
         private System.Windows.Forms.ColumnHeader openedbyColumn;
         private System.Windows.Forms.ColumnHeader assignedtoColumn;
-        private System.Windows.Forms.ColumnHeader checkColumn;
         private System.Windows.Forms.NotifyIcon updateNotifyIcon;
     }
 }
