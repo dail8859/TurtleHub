@@ -60,6 +60,7 @@ namespace TurtleHub
             this.openedbyColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.assignedtoColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.updateNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.BtnShowGithub = new System.Windows.Forms.Button();
             statusStrip = new System.Windows.Forms.StatusStrip();
             statusStrip.SuspendLayout();
             this.SuspendLayout();
@@ -151,6 +152,7 @@ namespace TurtleHub
             this.listView1.TabIndex = 2;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
+            this.listView1.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView1_ItemSelectionChanged);
             // 
             // numberColumn
             // 
@@ -181,6 +183,17 @@ namespace TurtleHub
             this.updateNotifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("updateNotifyIcon.Icon")));
             this.updateNotifyIcon.Text = "TurtleHub Update Available";
             // 
+            // BtnShowGithub
+            // 
+            this.BtnShowGithub.Enabled = false;
+            this.BtnShowGithub.Location = new System.Drawing.Point(95, 432);
+            this.BtnShowGithub.Name = "BtnShowGithub";
+            this.BtnShowGithub.Size = new System.Drawing.Size(96, 22);
+            this.BtnShowGithub.TabIndex = 13;
+            this.BtnShowGithub.Text = "Show on Github";
+            this.BtnShowGithub.UseVisualStyleBackColor = true;
+            this.BtnShowGithub.Click += new System.EventHandler(this.BtnShowGithub_Click);
+            // 
             // IssueBrowserDialog
             // 
             this.AcceptButton = this.BtnOk;
@@ -188,6 +201,7 @@ namespace TurtleHub
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.BtnCancel;
             this.ClientSize = new System.Drawing.Size(849, 487);
+            this.Controls.Add(this.BtnShowGithub);
             this.Controls.Add(statusStrip);
             this.Controls.Add(this.BtnReload);
             this.Controls.Add(this.listView1);
@@ -220,5 +234,6 @@ namespace TurtleHub
         private System.Windows.Forms.ColumnHeader openedbyColumn;
         private System.Windows.Forms.ColumnHeader assignedtoColumn;
         private System.Windows.Forms.NotifyIcon updateNotifyIcon;
+        private System.Windows.Forms.Button BtnShowGithub;
     }
 }

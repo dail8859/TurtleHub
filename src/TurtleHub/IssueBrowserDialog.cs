@@ -28,6 +28,7 @@ using System.Windows.Forms;
 using System.Xml;
 using System.Net;
 using System.IO;
+using System.Diagnostics;
 
 using Octokit;
 
@@ -60,7 +61,7 @@ namespace TurtleHub
             // The logging normally takes care of this but ifdef'ing this out keeps it from doing an unneeded rate limit check
             Logger.LogMessageWithData("Making Github request for issues");
             var ratelimit = await github.Miscellaneous.GetRateLimits();
-            Logger.LogMessage(string.Format("\tRate limit: {0}/{1}", ratelimit.Resources.Core.Remaining.ToString(),ratelimit.Resources.Core.Limit.ToString()));
+            Logger.LogMessage(string.Format("\tRate limit: {0}/{1}", ratelimit.Resources.Core.Remaining.ToString(), ratelimit.Resources.Core.Limit.ToString()));
 #endif
             issues = await github.Issue.GetAllForRepository(parameters.Username, parameters.Repository);
 
@@ -119,7 +120,20 @@ namespace TurtleHub
         private void BtnReload_Click(object sender, EventArgs e)
         {
             Logger.LogMessage("Reload issues");
+            BtnShowGithub.Enabled = false;
             StartIssuesRequest();
+        }
+
+        private void listView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            BtnShowGithub.Enabled = e.IsSelected;
+        }
+
+        private void BtnShowGithub_Click(object sender, EventArgs e)
+        {
+            var issue = listView1.SelectedItems[0].Tag as Issue;
+            Logger.LogMessageWithData("Opening " + issue.HtmlUrl.AbsoluteUri);
+            Process.Start(issue.HtmlUrl.AbsoluteUri);
         }
     }
 }
