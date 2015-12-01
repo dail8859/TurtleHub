@@ -178,10 +178,11 @@ namespace TurtleHub
             // updateNotifyIcon
             // 
             this.updateNotifyIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.updateNotifyIcon.BalloonTipText = "There is a new version of TurtleHub available.";
-            this.updateNotifyIcon.BalloonTipTitle = "TurtleHub Update Available";
+            this.updateNotifyIcon.BalloonTipText = "TurtleHub {0} is available for download!\r\n";
+            this.updateNotifyIcon.BalloonTipTitle = "TurtleHub Update";
             this.updateNotifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("updateNotifyIcon.Icon")));
             this.updateNotifyIcon.Text = "TurtleHub Update Available";
+            this.updateNotifyIcon.BalloonTipClicked += new System.EventHandler(this.updateNotifyIcon_Click);
             // 
             // BtnShowGithub
             // 

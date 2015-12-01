@@ -39,6 +39,7 @@ namespace TurtleHub
         private List<Issue> _issuesAffected = new List<Issue>();
         private IReadOnlyCollection<Issue> issues;
         private Parameters parameters;
+        private Release latest_release = null;
 
         public IssueBrowserDialog(Parameters parameters)
         {
@@ -56,13 +57,14 @@ namespace TurtleHub
             statusLabel.Text = "Downloading\x2026";
 
             var github = new GitHubClient(new ProductHeaderValue("TurtleHub"));
+            Logger.LogMessageWithData("Making Github request for issues");
 
 #if DEBUG
             // The logging normally takes care of this but ifdef'ing this out keeps it from doing an unneeded rate limit check
-            Logger.LogMessageWithData("Making Github request for issues");
             var ratelimit = await github.Miscellaneous.GetRateLimits();
             Logger.LogMessage(string.Format("\tRate limit: {0}/{1}", ratelimit.Resources.Core.Remaining.ToString(), ratelimit.Resources.Core.Limit.ToString()));
 #endif
+
             issues = await github.Issue.GetAllForRepository(parameters.Username, parameters.Repository);
 
             listView1.Items.Clear();
@@ -90,10 +92,33 @@ namespace TurtleHub
             workStatus.Visible = false;
             statusLabel.Text = "Ready";
 
+            CheckForUpdate(github);
+        }
+
+        private async void CheckForUpdate(GitHubClient github)
+        {
+            // Only check if we haven't checked before
+            if (latest_release != null) return;
+
             // Let's check to see if there is an update for TurtleHub
-            //var th = await github.Repository.Get("dail8859", "TurtleHub");
-            //var th = await github.Release.GetAll("dail8859", "TurtleHub");
-            //var latest = await github.Release.Get("dail8859", "TurtleHub", th[0].Id);
+            Logger.LogMessageWithData("Checking for new TurtleHub release");
+            var releases = await github.Release.GetAll("dail8859", "TurtleHub");
+            var latest = await github.Release.Get("dail8859", "TurtleHub", releases[0].Id);
+            Logger.LogMessage("\tFound " + latest.TagName);
+
+            var thatVersion = Version.Parse(latest.TagName.Substring(1)); // remove the v from e.g. v0.1.1
+            var thisVersion = typeof(Plugin).Assembly.GetName().Version;
+
+            Logger.LogMessage("\tThis " + thisVersion.ToString());
+            Logger.LogMessage("\tThat " + thatVersion.ToString());
+            if (thatVersion > thisVersion)
+            {
+                updateNotifyIcon.BalloonTipText = string.Format(updateNotifyIcon.BalloonTipText, latest.TagName);
+                updateNotifyIcon.Visible = true;
+                updateNotifyIcon.ShowBalloonTip(15 * 1000);
+            }
+
+            latest_release = latest;
             //var response = await client.Connection.Get<object>(new Uri(latestAsset[0].Url), new Dictionary<string, string>(), "application/octet-stream");
         }
 
@@ -134,6 +159,34 @@ namespace TurtleHub
             var issue = listView1.SelectedItems[0].Tag as Issue;
             Logger.LogMessageWithData("Opening " + issue.HtmlUrl.AbsoluteUri);
             Process.Start(issue.HtmlUrl.AbsoluteUri);
+        }
+
+        private void updateNotifyIcon_Click(object sender, EventArgs e)
+        {
+            var thatVersion = Version.Parse(latest_release.TagName.Substring(1)); // remove the v from e.g. v0.1.1
+            var thisVersion = typeof(Plugin).Assembly.GetName().Version;
+
+            var message = new StringBuilder()
+                    .AppendLine("There is a new version of TurtleHub available. Would you like to update now?")
+                    .AppendLine()
+                    .Append("Your version: ").Append(thisVersion).AppendLine()
+                    .Append("New version: ").Append(thatVersion).AppendLine()
+                    .ToString();
+
+            var reply = MessageBox.Show(this, message,
+                "Update Notice", MessageBoxButtons.YesNoCancel,
+                MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+
+            if (reply == DialogResult.Cancel)
+                return;
+
+            if (reply == DialogResult.Yes)
+            {
+                Process.Start(latest_release.HtmlUrl);
+                Close();
+            }
+
+            updateNotifyIcon.Visible = false;
         }
     }
 }
