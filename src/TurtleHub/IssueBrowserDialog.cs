@@ -40,32 +40,61 @@ namespace TurtleHub
         private IReadOnlyCollection<Issue> issues;
         private Parameters parameters;
         private Release latest_release = null;
+        private GitHubClient client;
 
         public IssueBrowserDialog(Parameters parameters)
         {
             InitializeComponent();
 
+            Logger.LogMessageWithData("IssueBrowserDialog()");
+
             this.parameters = parameters;
 
             Text = string.Format(Text, parameters.Repository);
+
+            client = new GitHubClient(new ProductHeaderValue("TurtleHub"));
+            CheckAuthorization();
+            StartIssuesRequest();
+            CheckForUpdate();
+        }
+
+        private void CheckAuthorization()
+        {
+            string appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            string filePath = Path.Combine(appDataFolder, "TurtleHub", "tokens.txt");
+
+            Logger.LogMessage("\t" + filePath);
+
+            if (File.Exists(filePath))
+            {
+                Logger.LogMessage("\tFound token file");
+
+                var tokenfile = File.ReadAllLines(filePath);
+                Dictionary<string, string> dictionary = new List<string>(tokenfile).ToDictionary(s => s.Split('=')[0], s => s.Split('=')[1]);
+
+                if (dictionary.ContainsKey(client.BaseAddress.AbsoluteUri))
+                {
+                    Logger.LogMessage("\tFound token for " + client.BaseAddress.AbsoluteUri);
+                    client.Credentials = new Credentials(dictionary[client.BaseAddress.AbsoluteUri]);
+                }
+            }
         }
 
         private async void StartIssuesRequest()
         {
+            Logger.LogMessageWithData("StartIssuesRequest()");
+
             BtnReload.Enabled = false;
             workStatus.Visible = true;
             statusLabel.Text = "Downloading\x2026";
 
-            var github = new GitHubClient(new ProductHeaderValue("TurtleHub"));
-            Logger.LogMessageWithData("Making Github request for issues");
-
 #if DEBUG
             // The logging normally takes care of this but ifdef'ing this out keeps it from doing an unneeded rate limit check
-            var ratelimit = await github.Miscellaneous.GetRateLimits();
+            var ratelimit = await client.Miscellaneous.GetRateLimits();
             Logger.LogMessage(string.Format("\tRate limit: {0}/{1}", ratelimit.Resources.Core.Remaining.ToString(), ratelimit.Resources.Core.Limit.ToString()));
 #endif
 
-            issues = await github.Issue.GetAllForRepository(parameters.Username, parameters.Repository);
+            issues = await client.Issue.GetAllForRepository(parameters.Username, parameters.Repository);
 
             listView1.Items.Clear();
             Logger.LogMessage("\tGot " + issues.Count().ToString() + " issues");
@@ -84,26 +113,29 @@ namespace TurtleHub
                 lvi.Tag = issue;
                 listView1.Items.Add(lvi);
             }
+
+            // Resize the columns
+            foreach (ColumnHeader col in listView1.Columns) col.Width = -2;
+
 #if DEBUG
-            ratelimit = await github.Miscellaneous.GetRateLimits();
+            ratelimit = await client.Miscellaneous.GetRateLimits();
             Logger.LogMessage(string.Format("\tRate limit: {0}/{1}", ratelimit.Resources.Core.Remaining.ToString(), ratelimit.Resources.Core.Limit.ToString()));
 #endif
+
             BtnReload.Enabled = true;
             workStatus.Visible = false;
             statusLabel.Text = "Ready";
-
-            CheckForUpdate(github);
         }
 
-        private async void CheckForUpdate(GitHubClient github)
+        private async void CheckForUpdate()
         {
             // Only check if we haven't checked before
             if (latest_release != null) return;
 
-            // Let's check to see if there is an update for TurtleHub
+            // Check to see if there is an update for TurtleHub
             Logger.LogMessageWithData("Checking for new TurtleHub release");
-            var releases = await github.Release.GetAll("dail8859", "TurtleHub");
-            var latest = await github.Release.Get("dail8859", "TurtleHub", releases[0].Id);
+            var releases = await client.Release.GetAll("dail8859", "TurtleHub");
+            var latest = await client.Release.Get("dail8859", "TurtleHub", releases[0].Id);
             Logger.LogMessage("\tFound " + latest.TagName);
 
             var thatVersion = Version.Parse(latest.TagName.Substring(1)); // remove the v from e.g. v0.1.1
@@ -125,11 +157,6 @@ namespace TurtleHub
         public IReadOnlyCollection<Issue> IssuesFixed
         {
             get { return _issuesAffected; }
-        }
-
-        private void MyIssuesForm_Load(object sender, EventArgs e)
-        {
-            StartIssuesRequest();
         }
 
         private void BtnOk_Click(object sender, EventArgs e)
@@ -163,6 +190,8 @@ namespace TurtleHub
 
         private void updateNotifyIcon_Click(object sender, EventArgs e)
         {
+            Debug.Assert(latest_release != null);
+
             var thatVersion = Version.Parse(latest_release.TagName.Substring(1)); // remove the v from e.g. v0.1.1
             var thisVersion = typeof(Plugin).Assembly.GetName().Version;
 

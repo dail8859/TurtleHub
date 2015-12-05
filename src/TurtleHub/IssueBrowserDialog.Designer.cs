@@ -214,7 +214,6 @@ namespace TurtleHub
             this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Issues for {0}";
-            this.Load += new System.EventHandler(this.MyIssuesForm_Load);
             statusStrip.ResumeLayout(false);
             statusStrip.PerformLayout();
             this.ResumeLayout(false);
