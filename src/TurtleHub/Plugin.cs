@@ -139,7 +139,7 @@ namespace TurtleHub
             Logger.LogMessageWithData("ValidateParameters:" + parameters);
             Parameters p = new Parameters(parameters);
 
-            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create("https://api.github.com/repos/" + p.Username + "/" + p.Repository);
+            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create("https://api.github.com/repos/" + p.Owner + "/" + p.Repository);
             webRequest.UserAgent = "TurtleHub"; // per GitHub's documentation
             webRequest.Method = "HEAD"; // we only need the status
 

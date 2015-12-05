@@ -24,31 +24,42 @@ using System.Threading.Tasks;
 
 namespace TurtleHub
 {
-    public class Parameters
+    public class Parameters : Dictionary<string, string>
     {
-        public string Username { get; private set; }
-        public string Repository { get; private set; }
-
-        public Parameters(string parameters)
+        public string Owner
         {
-            var ownerrepo = parameters.Split('/');
-            if (ownerrepo.Length == 2)
-            {
-                this.Username = ownerrepo[0];
-                this.Repository = ownerrepo[1];
-            }
+            get { return this.ContainsKey("owner") ? this["owner"] : ""; }
+            set { this["owner"] = value; }
+        }
+        
+        public string Repository
+        {
+            get { return this.ContainsKey("repository") ? this["repository"] : ""; }
+            set { this["repository"] = value; }
         }
 
-        public Parameters(string username, string repository)
+        public bool Debug
         {
-            this.Username = username;
-            this.Repository = repository;
+            get { return this.ContainsKey("debug") ? Convert.ToBoolean(this["debug"]) : false; }
+            set { this["debug"] = Convert.ToString(value); }
+        }
+
+        public Parameters() : base() {}
+        public Parameters(int capacity) : base(capacity) { }
+        public Parameters(string parameters) : base()
+        {
+            var dict = parameters.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+               .Select(part => part.Split('='))
+               .ToDictionary(split => split[0], split => split[1]);
+
+            foreach(var item in dict)
+                this[item.Key] = item.Value;
         }
 
         public override string ToString()
         {
             // NOTE: make sure this string is formatted in a way that is acceptable to the constructor
-            return Username + "/" + Repository;
+            return string.Join(";", this.Select(x => x.Key + "=" + x.Value));
         }
     }
 }

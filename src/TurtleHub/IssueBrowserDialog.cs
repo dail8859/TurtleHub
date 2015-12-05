@@ -94,7 +94,7 @@ namespace TurtleHub
             Logger.LogMessage(string.Format("\tRate limit: {0}/{1}", ratelimit.Resources.Core.Remaining.ToString(), ratelimit.Resources.Core.Limit.ToString()));
 #endif
 
-            issues = await client.Issue.GetAllForRepository(parameters.Username, parameters.Repository);
+            issues = await client.Issue.GetAllForRepository(parameters.Owner, parameters.Repository);
 
             listView1.Items.Clear();
             Logger.LogMessage("\tGot " + issues.Count().ToString() + " issues");

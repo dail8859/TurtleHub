@@ -33,13 +33,22 @@ namespace TurtleHub
 {
     public partial class OptionsDialog : Form
     {
-        public Parameters Params { get { return new Parameters(TxtOwner.Text, TxtRepository.Text); } }
+        public Parameters Params
+        {
+            get
+            {
+                Parameters p = new Parameters();
+                p.Owner = TxtOwner.Text;
+                p.Repository = TxtRepository.Text;
+                return p;
+            }
+        }
 
         public OptionsDialog(Parameters parameters)
         {
             InitializeComponent();
 
-            TxtOwner.Text = parameters.Username;
+            TxtOwner.Text = parameters.Owner;
             TxtRepository.Text = parameters.Repository;
         }
 
