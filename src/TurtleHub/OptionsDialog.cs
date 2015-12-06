@@ -55,16 +55,25 @@ namespace TurtleHub
         private async void TxtRepository_Enter(object sender, EventArgs e)
         {
             String owner = TxtOwner.Text;
-            var github = new GitHubClient(new ProductHeaderValue("TurtleHub"));
-            var repos = await github.Repository.GetAllForUser(owner);
+            if (owner.Length == 0) return;
 
-            var repo_list = new AutoCompleteStringCollection();
-            foreach(var repo in repos)
+            try
             {
-                repo_list.Add(repo.Name);
-            }
+                var github = new GitHubClient(new ProductHeaderValue("TurtleHub"));
+                var repos = await github.Repository.GetAllForUser(owner);
 
-            TxtRepository.AutoCompleteCustomSource = repo_list;
+                var repo_list = new AutoCompleteStringCollection();
+                foreach (var repo in repos)
+                {
+                    repo_list.Add(repo.Name);
+                }
+
+                TxtRepository.AutoCompleteCustomSource = repo_list;
+            }
+            catch(ApiException)
+            {
+                // Let this silently fail, the user just won't have an autocomplete list
+            }
         }
     }
 }

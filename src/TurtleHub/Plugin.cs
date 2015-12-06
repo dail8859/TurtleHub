@@ -129,55 +129,46 @@ namespace TurtleHub
             OptionsDialog form = new OptionsDialog(new Parameters(parameters));
             if (form.ShowDialog(WindowHandleWrapper.TryCreate(hParentWnd)) == DialogResult.OK)
                 return form.Params.ToString();
-
-            // Else just return the original value
-            return parameters;
+            else // just return the original value
+                return parameters;
         }
-
         public bool ValidateParameters(IntPtr hParentWnd, string parameters)
         {
             Logger.LogMessageWithData("ValidateParameters:" + parameters);
             Parameters p = new Parameters(parameters);
 
-            HttpWebRequest webRequest = (HttpWebRequest)WebRequest.Create("https://api.github.com/repos/" + p.Owner + "/" + p.Repository);
-            webRequest.UserAgent = "TurtleHub"; // per GitHub's documentation
-            webRequest.Method = "HEAD"; // we only need the status
+            if (p.Owner.Length == 0 || p.Repository.Length == 0)
+            {
+                MessageBox.Show("Invalid settings.", "TurtleHub", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return false;
+            }
 
-            Logger.LogMessage("Sending Http request to validate " + parameters);
-
+            Repository repo;
             try
             {
-                HttpWebResponse webResponse = (HttpWebResponse)webRequest.GetResponse();
-
-                Logger.LogMessage("\tReceived response " + webResponse.StatusCode.ToString());
-
-                if (webResponse.StatusCode == HttpStatusCode.OK) Logger.LogMessage("\tRepository found");
-                else Logger.LogMessage("\tNot sure what happend but assume repository found");
-
-                webResponse.Close();
-
-                return true;
+                var client = new GitHubClient(new ProductHeaderValue("TurtleHub"));
+                var task = client.Repository.Get(p.Owner, p.Repository);
+                task.Wait();
+                repo = task.Result;
             }
-            catch (WebException wex)
+            catch(Exception ex)
             {
-                HttpWebResponse webResponse = (HttpWebResponse)wex.Response;
-
-                Logger.LogMessage("\tWebException: Received response " + webResponse.StatusCode.ToString());
-
-                MessageBox.Show(parameters + " does not exist.", "TurtleHub", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                if (webResponse.StatusCode == HttpStatusCode.NotFound) Logger.LogMessage("\tRepository does not exist");
-                else Logger.LogMessage("\tNot sure what happend");
-
-                webResponse.Close();
-
-                return false;
+                var res = MessageBox.Show("The repository could not be verified. Continue anyways?", "TurtleHub", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                return res == DialogResult.Yes;
             }
-            catch (Exception ex)
+
+            if (!repo.HasIssues)
             {
-                Logger.LogMessage(ex.ToString());
-                MessageBox.Show(ex.ToString(), "TurtleHub Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return false;
+                var res = MessageBox.Show("This Repository doesn't seem to have issues. Continue anyways?", "TurtleHub", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (res == DialogResult.No) return false;
             }
+            else if(repo.OpenIssuesCount == 0)
+            {
+                var res = MessageBox.Show("This Repository doesn't have any open issues. Continue anyways?", "TurtleHub", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                if (res == DialogResult.No) return false;
+            }
+
+            return true;
         }
     }
 }
