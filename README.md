@@ -1,6 +1,8 @@
 # TurtleHub
 [TortoiseGit](https://tortoisegit.org/) issue tracker plugin for projects hosted on GitHub.
 
+![Screen Shot](https://dl.dropboxusercontent.com/u/13788271/TurtleHub/screenshot.png)
+
 *This is still in the early development stages, but should still be useful.*
 
 Release versions can be downloaded on the [Release](https://github.com/dail8859/TurtleHub/releases) page.
