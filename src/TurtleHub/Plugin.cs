@@ -72,7 +72,8 @@ namespace TurtleHub
 
             try
             {
-                IssueBrowserDialog form = new IssueBrowserDialog(new Parameters(parameters));
+                Parameters parms = new Parameters(parameters);
+                IssueBrowserDialog form = new IssueBrowserDialog(parms);
                 if (form.ShowDialog(WindowHandleWrapper.TryCreate(hParentWnd)) != DialogResult.OK)
                     return originalMessage;
 
@@ -82,8 +83,7 @@ namespace TurtleHub
 
                 foreach (Issue issue in form.IssuesFixed)
                 {
-                    // TODO: make this string configurable
-                    result.AppendFormat("Fixed #{0}: {1}", issue.Number, issue.Title);
+                    result.AppendFormat("{0} #{1}", parms.Keyword, issue.Number);
                     result.AppendLine();
                 }
 

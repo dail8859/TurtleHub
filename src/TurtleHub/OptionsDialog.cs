@@ -32,6 +32,7 @@ namespace TurtleHub
                 Parameters p = new Parameters();
                 p.Owner = TxtOwner.Text;
                 p.Repository = TxtRepository.Text;
+                p.Keyword = CmbKeyword.Text;
                 return p;
             }
         }
@@ -42,6 +43,9 @@ namespace TurtleHub
 
             TxtOwner.Text = parameters.Owner;
             TxtRepository.Text = parameters.Repository;
+
+            int idx = CmbKeyword.FindString(parameters.Keyword);
+            CmbKeyword.SelectedIndex = idx != -1 ? idx : 0;
         }
 
         private async void TxtRepository_Enter(object sender, EventArgs e)

@@ -44,6 +44,12 @@ namespace TurtleHub
             set { this["debug"] = Convert.ToString(value); }
         }
 
+        public string Keyword
+        {
+            get { return this.ContainsKey("keyword") ? this["keyword"] : "Closes"; }
+            set { this["keyword"] = value; }
+        }
+
         public Parameters() : base() {}
         public Parameters(string parameters) : base()
         {
