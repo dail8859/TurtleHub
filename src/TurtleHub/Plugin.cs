@@ -151,7 +151,7 @@ namespace TurtleHub
                 task.Wait();
                 repo = task.Result;
             }
-            catch(Exception ex)
+            catch(Exception)
             {
                 var res = MessageBox.Show("The repository could not be verified. Continue anyways?", "TurtleHub", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 return res == DialogResult.Yes;

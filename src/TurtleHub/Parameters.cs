@@ -45,7 +45,6 @@ namespace TurtleHub
         }
 
         public Parameters() : base() {}
-        public Parameters(int capacity) : base(capacity) { }
         public Parameters(string parameters) : base()
         {
             var dict = parameters.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)

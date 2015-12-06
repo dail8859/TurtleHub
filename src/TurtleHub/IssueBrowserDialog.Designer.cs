@@ -49,6 +49,7 @@ namespace TurtleHub
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.StatusStrip statusStrip;
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IssueBrowserDialog));
+            System.Windows.Forms.Label label1;
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.workStatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.BtnOk = new System.Windows.Forms.Button();
@@ -61,7 +62,9 @@ namespace TurtleHub
             this.assignedtoColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.updateNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.BtnShowGithub = new System.Windows.Forms.Button();
+            this.TxtSearch = new System.Windows.Forms.TextBox();
             statusStrip = new System.Windows.Forms.StatusStrip();
+            label1 = new System.Windows.Forms.Label();
             statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -92,7 +95,7 @@ namespace TurtleHub
             this.workStatus.Image = ((System.Drawing.Image)(resources.GetObject("workStatus.Image")));
             this.workStatus.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
             this.workStatus.Name = "workStatus";
-            this.workStatus.Size = new System.Drawing.Size(45, 17);
+            this.workStatus.Size = new System.Drawing.Size(50, 17);
             this.workStatus.Visible = false;
             // 
             // BtnOk
@@ -103,7 +106,7 @@ namespace TurtleHub
             this.BtnOk.Location = new System.Drawing.Point(681, 432);
             this.BtnOk.Name = "BtnOk";
             this.BtnOk.Size = new System.Drawing.Size(75, 23);
-            this.BtnOk.TabIndex = 0;
+            this.BtnOk.TabIndex = 3;
             this.BtnOk.Text = "OK";
             this.BtnOk.UseVisualStyleBackColor = true;
             this.BtnOk.Click += new System.EventHandler(this.BtnOk_Click);
@@ -116,7 +119,7 @@ namespace TurtleHub
             this.BtnCancel.Location = new System.Drawing.Point(762, 432);
             this.BtnCancel.Name = "BtnCancel";
             this.BtnCancel.Size = new System.Drawing.Size(75, 23);
-            this.BtnCancel.TabIndex = 1;
+            this.BtnCancel.TabIndex = 4;
             this.BtnCancel.Text = "Cancel";
             this.BtnCancel.UseVisualStyleBackColor = true;
             // 
@@ -129,6 +132,7 @@ namespace TurtleHub
             this.BtnReload.TabIndex = 3;
             this.BtnReload.Text = "Reload";
             this.BtnReload.UseVisualStyleBackColor = true;
+            this.BtnReload.Visible = false;
             this.BtnReload.Click += new System.EventHandler(this.BtnReload_Click);
             // 
             // listView1
@@ -145,11 +149,11 @@ namespace TurtleHub
             this.listView1.FullRowSelect = true;
             this.listView1.GridLines = true;
             this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(0, 0);
+            this.listView1.Location = new System.Drawing.Point(0, 33);
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(849, 421);
-            this.listView1.TabIndex = 2;
+            this.listView1.Size = new System.Drawing.Size(849, 388);
+            this.listView1.TabIndex = 1;
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
             this.listView1.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView1_ItemSelectionChanged);
@@ -186,14 +190,32 @@ namespace TurtleHub
             // 
             // BtnShowGithub
             // 
+            this.BtnShowGithub.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.BtnShowGithub.Enabled = false;
-            this.BtnShowGithub.Location = new System.Drawing.Point(95, 432);
+            this.BtnShowGithub.Location = new System.Drawing.Point(12, 432);
             this.BtnShowGithub.Name = "BtnShowGithub";
             this.BtnShowGithub.Size = new System.Drawing.Size(96, 22);
-            this.BtnShowGithub.TabIndex = 13;
+            this.BtnShowGithub.TabIndex = 2;
             this.BtnShowGithub.Text = "Show on Github";
             this.BtnShowGithub.UseVisualStyleBackColor = true;
             this.BtnShowGithub.Click += new System.EventHandler(this.BtnShowGithub_Click);
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(12, 9);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(44, 13);
+            label1.TabIndex = 14;
+            label1.Text = "Search:";
+            // 
+            // TxtSearch
+            // 
+            this.TxtSearch.Location = new System.Drawing.Point(62, 6);
+            this.TxtSearch.Name = "TxtSearch";
+            this.TxtSearch.Size = new System.Drawing.Size(166, 21);
+            this.TxtSearch.TabIndex = 0;
+            this.TxtSearch.TextChanged += new System.EventHandler(this.TxtSearch_TextChanged);
             // 
             // IssueBrowserDialog
             // 
@@ -202,6 +224,8 @@ namespace TurtleHub
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.BtnCancel;
             this.ClientSize = new System.Drawing.Size(849, 487);
+            this.Controls.Add(this.TxtSearch);
+            this.Controls.Add(label1);
             this.Controls.Add(this.BtnShowGithub);
             this.Controls.Add(statusStrip);
             this.Controls.Add(this.BtnReload);
@@ -235,5 +259,6 @@ namespace TurtleHub
         private System.Windows.Forms.ColumnHeader assignedtoColumn;
         private System.Windows.Forms.NotifyIcon updateNotifyIcon;
         private System.Windows.Forms.Button BtnShowGithub;
+        private System.Windows.Forms.TextBox TxtSearch;
     }
 }

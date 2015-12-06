@@ -54,7 +54,7 @@ namespace TurtleHub
 
             client = new GitHubClient(new ProductHeaderValue("TurtleHub"));
             CheckAuthorization();
-            StartIssuesRequest();
+            MakeIssuesRequest();
             CheckForUpdate();
         }
 
@@ -80,10 +80,12 @@ namespace TurtleHub
             }
         }
 
-        private async void StartIssuesRequest()
+        private async void MakeIssuesRequest()
         {
             Logger.LogMessageWithData("StartIssuesRequest()");
 
+            TxtSearch.Text = "";
+            TxtSearch.Enabled = false;
             BtnReload.Enabled = false;
             workStatus.Visible = true;
             statusLabel.Text = "Downloading\x2026";
@@ -95,27 +97,15 @@ namespace TurtleHub
 #endif
 
             issues = await client.Issue.GetAllForRepository(parameters.Owner, parameters.Repository);
-
-            listView1.Items.Clear();
             Logger.LogMessage("\tGot " + issues.Count().ToString() + " issues");
 
-            foreach(var issue in issues)
-            {
-                // Skip pull requests
-                if (issue.PullRequest != null) continue;
-
-                ListViewItem lvi = new ListViewItem();
-                lvi.Text = issue.Number.ToString();
-                lvi.SubItems.Add(issue.Title);
-                lvi.SubItems.Add(issue.User.Login);
-                if (issue.Assignee != null) lvi.SubItems.Add(issue.Assignee.Login);
-                else lvi.SubItems.Add("");
-                lvi.Tag = issue;
-                listView1.Items.Add(lvi);
-            }
+            ShowIssues();
 
             // Resize the columns
-            foreach (ColumnHeader col in listView1.Columns) col.Width = -2;
+            listView1.Columns[0].Width = -2;
+            // Skip summary column
+            listView1.Columns[2].Width = -2;
+            listView1.Columns[3].Width = -2;
 
 #if DEBUG
             ratelimit = await client.Miscellaneous.GetRateLimits();
@@ -123,6 +113,7 @@ namespace TurtleHub
 #endif
 
             BtnReload.Enabled = true;
+            TxtSearch.Enabled = true;
             workStatus.Visible = false;
             statusLabel.Text = "Ready";
         }
@@ -159,6 +150,40 @@ namespace TurtleHub
             get { return _issuesAffected; }
         }
 
+        private void ShowIssues()
+        {
+            // Helper function for case insensitive contains, NOTE: icontains(a,b) != icontains(b,a)
+            Func<string, string, bool> icontains = (a, b) => a.IndexOf(b, StringComparison.OrdinalIgnoreCase) != -1;
+            string s = TxtSearch.Text;
+            var l = new List<ListViewItem>();
+
+            //if (TxtSearch.TextLength > 0) TxtSearch.BackColor = Color.PaleGreen;
+            //else TxtSearch.BackColor = Color.Empty;
+
+            foreach (var issue in issues)
+            {
+                // Skip pull requests
+                if (issue.PullRequest != null) continue;
+
+                if (icontains(issue.Number.ToString(), s) || icontains(issue.Title, s) || icontains(issue.User.Login, s))
+                {
+                    ListViewItem lvi = new ListViewItem();
+                    lvi.Text = issue.Number.ToString();
+                    lvi.SubItems.Add(issue.Title);
+                    lvi.SubItems.Add(issue.User.Login);
+                    if (issue.Assignee != null) lvi.SubItems.Add(issue.Assignee.Login);
+                    else lvi.SubItems.Add("");
+                    lvi.Tag = issue;
+                    l.Add(lvi);
+                }
+            }
+
+            listView1.Items.Clear();
+            listView1.Items.AddRange(l.ToArray());
+        }
+
+
+
         private void BtnOk_Click(object sender, EventArgs e)
         {
             foreach (ListViewItem lvi in listView1.Items)
@@ -173,7 +198,7 @@ namespace TurtleHub
         {
             Logger.LogMessage("Reload issues");
             BtnShowGithub.Enabled = false;
-            StartIssuesRequest();
+            MakeIssuesRequest();
         }
 
         private void listView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
@@ -216,6 +241,11 @@ namespace TurtleHub
             }
 
             updateNotifyIcon.Visible = false;
+        }
+
+        private void TxtSearch_TextChanged(object sender, EventArgs e)
+        {
+            ShowIssues();
         }
     }
 }
