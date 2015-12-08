@@ -98,6 +98,15 @@ namespace TurtleHub
             this.workStatus.Size = new System.Drawing.Size(50, 17);
             this.workStatus.Visible = false;
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(12, 9);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(44, 13);
+            label1.TabIndex = 14;
+            label1.Text = "Search:";
+            // 
             // BtnOk
             // 
             this.BtnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -184,7 +193,6 @@ namespace TurtleHub
             this.updateNotifyIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
             this.updateNotifyIcon.BalloonTipText = "TurtleHub {0} is available for download!\r\n";
             this.updateNotifyIcon.BalloonTipTitle = "TurtleHub Update";
-            this.updateNotifyIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("updateNotifyIcon.Icon")));
             this.updateNotifyIcon.Text = "TurtleHub Update Available";
             this.updateNotifyIcon.BalloonTipClicked += new System.EventHandler(this.updateNotifyIcon_Click);
             // 
@@ -199,15 +207,6 @@ namespace TurtleHub
             this.BtnShowGithub.Text = "Show on Github";
             this.BtnShowGithub.UseVisualStyleBackColor = true;
             this.BtnShowGithub.Click += new System.EventHandler(this.BtnShowGithub_Click);
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new System.Drawing.Point(12, 9);
-            label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(44, 13);
-            label1.TabIndex = 14;
-            label1.Text = "Search:";
             // 
             // TxtSearch
             // 
@@ -235,7 +234,6 @@ namespace TurtleHub
             this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.MinimizeBox = false;
             this.Name = "IssueBrowserDialog";
-            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Issues for {0}";
             statusStrip.ResumeLayout(false);

@@ -45,6 +45,8 @@ namespace TurtleHub
         public IssueBrowserDialog(Parameters parameters)
         {
             InitializeComponent();
+            this.Icon = Properties.Resources.TurtleHub;
+            updateNotifyIcon.Icon = Properties.Resources.TurtleHub;
 
             Logger.LogMessageWithData("IssueBrowserDialog()");
 

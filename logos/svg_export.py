@@ -6,7 +6,7 @@ import subprocess as sp
 
 exe_path = "C:\Program Files\Inkscape\inkscape.exe"
 fname = "turtle_hub-%d.png"
-sizes = [16, 32, 64, 128]
+sizes = [16, 32, 48, 256]
 
 
 def generate_logos():
@@ -14,11 +14,6 @@ def generate_logos():
     for w in sizes:
         print "Exporting logo size %dx%d..." % (w, w)
         sp.call(cmd % (w, w))
-
-def generate_ico():
-    print "Generating icon..."
-    cmd = "png2ico.exe TurtleHub.ico " + " ".join(fname % (w) for w in sizes)
-    sp.call(cmd)
 
 def generate_banner():
     print "Exporting banner..."
@@ -32,6 +27,5 @@ def generate_dialog():
 
 if __name__ == "__main__":
     generate_logos()
-    generate_ico()
     generate_banner()
     generate_dialog()
