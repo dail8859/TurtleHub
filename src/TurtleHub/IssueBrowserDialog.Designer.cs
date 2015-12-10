@@ -203,7 +203,7 @@ namespace TurtleHub
             this.objectListView1.ShowFilterMenuOnRightClick = false;
             this.objectListView1.ShowGroups = false;
             this.objectListView1.Size = new System.Drawing.Size(849, 393);
-            this.objectListView1.TabIndex = 15;
+            this.objectListView1.TabIndex = 1;
             this.objectListView1.UseAlternatingBackColors = true;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
