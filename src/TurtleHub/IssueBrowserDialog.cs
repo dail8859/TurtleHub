@@ -31,29 +31,41 @@ using System.IO;
 using System.Diagnostics;
 
 using Octokit;
+using BrightIdeasSoftware;
+using System.Collections.ObjectModel;
 
 namespace TurtleHub
 {
     partial class IssueBrowserDialog : Form
     {
-        private List<Issue> _issuesAffected = new List<Issue>();
         private IReadOnlyCollection<Issue> issues;
         private Parameters parameters;
         private Release latest_release = null;
         private GitHubClient client;
+        private TypedObjectListView<Issue> issuelistview;
 
         public IssueBrowserDialog(Parameters parameters)
         {
+            Logger.LogMessageWithData("IssueBrowserDialog()");
+
             InitializeComponent();
+
+            // Set the icons here instead of them being stored in the resource file multiple times
             this.Icon = Properties.Resources.TurtleHub;
             updateNotifyIcon.Icon = Properties.Resources.TurtleHub;
-
-            Logger.LogMessageWithData("IssueBrowserDialog()");
 
             this.parameters = parameters;
 
             Text = string.Format(Text, parameters.Repository);
 
+            // Wrap the objectlistview and set the aspects appropriately
+            issuelistview = new TypedObjectListView<Issue>(this.objectListView1);
+            issuelistview.GetColumn(0).AspectGetter = delegate(Issue x) { return x.Number; };
+            issuelistview.GetColumn(1).AspectGetter = delegate(Issue x) { return x.Title; };
+            issuelistview.GetColumn(2).AspectGetter = delegate(Issue x) { return x.User.Login; };
+            issuelistview.GetColumn(3).AspectGetter = delegate(Issue x) { return x.Assignee != null ? x.Assignee.Login : String.Empty; };
+
+            // Start the GitHub magic
             client = new GitHubClient(new ProductHeaderValue("TurtleHub"));
             CheckAuthorization();
             MakeIssuesRequest();
@@ -101,13 +113,11 @@ namespace TurtleHub
             issues = await client.Issue.GetAllForRepository(parameters.Owner, parameters.Repository);
             Logger.LogMessage("\tGot " + issues.Count().ToString() + " issues");
 
-            ShowIssues();
+            objectListView1.SetObjects(issues);
+            objectListView1.UseFiltering = true;
+            objectListView1.FullRowSelect = true; // appearantly this is important to do after SetObjects()
 
-            // Resize the columns
-            listView1.Columns[0].Width = -2;
-            // Skip summary column
-            listView1.Columns[2].Width = -2;
-            listView1.Columns[3].Width = -2;
+            ShowIssues();
 
 #if DEBUG
             ratelimit = await client.Miscellaneous.GetRateLimits();
@@ -147,53 +157,17 @@ namespace TurtleHub
             //var response = await client.Connection.Get<object>(new Uri(latestAsset[0].Url), new Dictionary<string, string>(), "application/octet-stream");
         }
 
-        public IReadOnlyCollection<Issue> IssuesFixed
+        public IList<Issue> IssuesFixed
         {
-            get { return _issuesAffected; }
+            get { return issuelistview.CheckedObjects; }
         }
 
         private void ShowIssues()
         {
-            // Helper function for case insensitive contains, NOTE: icontains(a,b) != icontains(b,a)
-            Func<string, string, bool> icontains = (a, b) => a.IndexOf(b, StringComparison.OrdinalIgnoreCase) != -1;
-            string s = TxtSearch.Text;
-            var l = new List<ListViewItem>();
-
-            //if (TxtSearch.TextLength > 0) TxtSearch.BackColor = Color.PaleGreen;
-            //else TxtSearch.BackColor = Color.Empty;
-
-            foreach (var issue in issues)
-            {
-                // Skip pull requests
-                if (issue.PullRequest != null) continue;
-
-                if (icontains(issue.Number.ToString(), s) || icontains(issue.Title, s) || icontains(issue.User.Login, s))
-                {
-                    ListViewItem lvi = new ListViewItem();
-                    lvi.Text = issue.Number.ToString();
-                    lvi.SubItems.Add(issue.Title);
-                    lvi.SubItems.Add(issue.User.Login);
-                    if (issue.Assignee != null) lvi.SubItems.Add(issue.Assignee.Login);
-                    else lvi.SubItems.Add("");
-                    lvi.Tag = issue;
-                    l.Add(lvi);
-                }
-            }
-
-            listView1.Items.Clear();
-            listView1.Items.AddRange(l.ToArray());
-        }
-
-
-
-        private void BtnOk_Click(object sender, EventArgs e)
-        {
-            foreach (ListViewItem lvi in listView1.Items)
-            {
-                Issue issueItem = lvi.Tag as Issue;
-                if (issueItem != null && lvi.Checked)
-                    _issuesAffected.Add(issueItem);
-            }
+            // Create a new filter based on the searchbox
+            var filter = TextMatchFilter.Contains(objectListView1, TxtSearch.Text);
+            objectListView1.ModelFilter = filter;
+            objectListView1.DefaultRenderer = new HighlightTextRenderer(filter);
         }
 
         private void BtnReload_Click(object sender, EventArgs e)
@@ -203,14 +177,14 @@ namespace TurtleHub
             MakeIssuesRequest();
         }
 
-        private void listView1_ItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
+        private void TxtSearch_TextChanged(object sender, EventArgs e)
         {
-            BtnShowGithub.Enabled = e.IsSelected;
+            ShowIssues();
         }
 
         private void BtnShowGithub_Click(object sender, EventArgs e)
         {
-            var issue = listView1.SelectedItems[0].Tag as Issue;
+            var issue = issuelistview.SelectedObject;
             Logger.LogMessageWithData("Opening " + issue.HtmlUrl.AbsoluteUri);
             Process.Start(issue.HtmlUrl.AbsoluteUri);
         }
@@ -245,9 +219,9 @@ namespace TurtleHub
             updateNotifyIcon.Visible = false;
         }
 
-        private void TxtSearch_TextChanged(object sender, EventArgs e)
+        private void objectListView1_SelectionChanged(object sender, EventArgs e)
         {
-            ShowIssues();
+            BtnShowGithub.Enabled = objectListView1.SelectedObject != null;
         }
     }
 }

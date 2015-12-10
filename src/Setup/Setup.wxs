@@ -47,15 +47,15 @@
 	<DirectoryRef Id='INSTALLDIR'>
 		<Component Id='CoreComponent' Guid='F1815014-6319-41E9-AA3B-0C4B5B8DFE9D' Win64='$(var.Win64YesNo)'>
 			<?if $(env.Platform)=x64 ?>
-			<File Id='TurtleHub.DLL' Name='TurtleHub.dll' DiskId='1' Source='../TurtleHub/bin/x64/Release/TurtleHub.dll' Vital='yes' />
-			<File Id='TurtleHub.PDB' Name='TurtleHub.pdb' DiskId='1' Source='../TurtleHub/bin/x64/Release/TurtleHub.pdb' Vital='no' />
-			<File Id='Octokit.DLL'   Name='Octokit.dll'   DiskId='1' Source='../TurtleHub/bin/x64/Release/Octokit.dll' Vital='yes' />
-			<File Id='Octokit.PDB'   Name='Octokit.pdb'   DiskId='1' Source='../TurtleHub/bin/x64/Release/Octokit.pdb' Vital='no' />
+			<File Id='TurtleHub.DLL'      Name='TurtleHub.dll'      DiskId='1' Source='../TurtleHub/bin/x64/Release/TurtleHub.dll' Vital='yes' />
+			<File Id='TurtleHub.PDB'      Name='TurtleHub.pdb'      DiskId='1' Source='../TurtleHub/bin/x64/Release/TurtleHub.pdb' Vital='no' />
+			<File Id='Octokit.DLL'        Name='Octokit.dll'        DiskId='1' Source='../TurtleHub/bin/x64/Release/Octokit.dll' Vital='yes' />
+			<File Id='ObjectListView.DLL' Name='ObjectListView.dll' DiskId='1' Source='../TurtleHub/bin/x64/Release/ObjectListView.dll' Vital='yes' />
 			<?else ?>
-			<File Id='TurtleHub.DLL' Name='TurtleHub.dll' DiskId='1' Source='../TurtleHub/bin/x86/Release/TurtleHub.dll' Vital='yes' />
-			<File Id='TurtleHub.PDB' Name='TurtleHub.pdb' DiskId='1' Source='../TurtleHub/bin/x86/Release/TurtleHub.pdb' Vital='no' />
-			<File Id='Octokit.DLL'   Name='Octokit.dll'   DiskId='1' Source='../TurtleHub/bin/x86/Release/Octokit.dll' Vital='yes' />
-			<File Id='Octokit.PDB'   Name='Octokit.pdb'   DiskId='1' Source='../TurtleHub/bin/x86/Release/Octokit.pdb' Vital='no' />
+			<File Id='TurtleHub.DLL'      Name='TurtleHub.dll'      DiskId='1' Source='../TurtleHub/bin/x86/Release/TurtleHub.dll' Vital='yes' />
+			<File Id='TurtleHub.PDB'      Name='TurtleHub.pdb'      DiskId='1' Source='../TurtleHub/bin/x86/Release/TurtleHub.pdb' Vital='no' />
+			<File Id='Octokit.DLL'        Name='Octokit.dll'        DiskId='1' Source='../TurtleHub/bin/x86/Release/Octokit.dll' Vital='yes' />
+			<File Id='ObjectListView.DLL' Name='ObjectListView.dll' DiskId='1' Source='../TurtleHub/bin/x86/Release/ObjectListView.dll' Vital='yes' />
 			<?endif ?>
 
 			<File Id='LICENSE' Name='LICENSE' DiskId='1' Source='../../LICENSE' Vital='yes' />

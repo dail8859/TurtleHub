@@ -55,17 +55,18 @@ namespace TurtleHub
             this.BtnOk = new System.Windows.Forms.Button();
             this.BtnCancel = new System.Windows.Forms.Button();
             this.BtnReload = new System.Windows.Forms.Button();
-            this.listView1 = new System.Windows.Forms.ListView();
-            this.numberColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.summaryColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.openedbyColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.assignedtoColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.updateNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.BtnShowGithub = new System.Windows.Forms.Button();
             this.TxtSearch = new System.Windows.Forms.TextBox();
+            this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
+            this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             statusStrip = new System.Windows.Forms.StatusStrip();
             label1 = new System.Windows.Forms.Label();
             statusStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).BeginInit();
             this.SuspendLayout();
             // 
             // statusStrip
@@ -118,7 +119,6 @@ namespace TurtleHub
             this.BtnOk.TabIndex = 3;
             this.BtnOk.Text = "OK";
             this.BtnOk.UseVisualStyleBackColor = true;
-            this.BtnOk.Click += new System.EventHandler(this.BtnOk_Click);
             // 
             // BtnCancel
             // 
@@ -143,50 +143,6 @@ namespace TurtleHub
             this.BtnReload.UseVisualStyleBackColor = true;
             this.BtnReload.Visible = false;
             this.BtnReload.Click += new System.EventHandler(this.BtnReload_Click);
-            // 
-            // listView1
-            // 
-            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.listView1.CheckBoxes = true;
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.numberColumn,
-            this.summaryColumn,
-            this.openedbyColumn,
-            this.assignedtoColumn});
-            this.listView1.FullRowSelect = true;
-            this.listView1.GridLines = true;
-            this.listView1.HideSelection = false;
-            this.listView1.Location = new System.Drawing.Point(0, 33);
-            this.listView1.MultiSelect = false;
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(849, 388);
-            this.listView1.TabIndex = 1;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
-            this.listView1.ItemSelectionChanged += new System.Windows.Forms.ListViewItemSelectionChangedEventHandler(this.listView1_ItemSelectionChanged);
-            // 
-            // numberColumn
-            // 
-            this.numberColumn.Text = "#";
-            this.numberColumn.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.numberColumn.Width = 44;
-            // 
-            // summaryColumn
-            // 
-            this.summaryColumn.Text = "Summary";
-            this.summaryColumn.Width = 596;
-            // 
-            // openedbyColumn
-            // 
-            this.openedbyColumn.Text = "Opened By";
-            this.openedbyColumn.Width = 115;
-            // 
-            // assignedtoColumn
-            // 
-            this.assignedtoColumn.Text = "Assigned To";
-            this.assignedtoColumn.Width = 90;
             // 
             // updateNotifyIcon
             // 
@@ -216,6 +172,63 @@ namespace TurtleHub
             this.TxtSearch.TabIndex = 0;
             this.TxtSearch.TextChanged += new System.EventHandler(this.TxtSearch_TextChanged);
             // 
+            // objectListView1
+            // 
+            this.objectListView1.AllColumns.Add(this.olvColumn1);
+            this.objectListView1.AllColumns.Add(this.olvColumn2);
+            this.objectListView1.AllColumns.Add(this.olvColumn3);
+            this.objectListView1.AllColumns.Add(this.olvColumn4);
+            this.objectListView1.AlternateRowBackColor = System.Drawing.Color.WhiteSmoke;
+            this.objectListView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.objectListView1.CellEditUseWholeCell = false;
+            this.objectListView1.CheckBoxes = true;
+            this.objectListView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.olvColumn1,
+            this.olvColumn2,
+            this.olvColumn3,
+            this.olvColumn4});
+            this.objectListView1.Cursor = System.Windows.Forms.Cursors.Default;
+            this.objectListView1.GridLines = true;
+            this.objectListView1.HasCollapsibleGroups = false;
+            this.objectListView1.HideSelection = false;
+            this.objectListView1.HighlightBackgroundColor = System.Drawing.Color.Empty;
+            this.objectListView1.HighlightForegroundColor = System.Drawing.Color.Empty;
+            this.objectListView1.Location = new System.Drawing.Point(0, 33);
+            this.objectListView1.MultiSelect = false;
+            this.objectListView1.Name = "objectListView1";
+            this.objectListView1.OverlayText.Text = "";
+            this.objectListView1.SelectAllOnControlA = false;
+            this.objectListView1.ShowFilterMenuOnRightClick = false;
+            this.objectListView1.ShowGroups = false;
+            this.objectListView1.Size = new System.Drawing.Size(849, 393);
+            this.objectListView1.TabIndex = 15;
+            this.objectListView1.UseAlternatingBackColors = true;
+            this.objectListView1.UseCompatibleStateImageBehavior = false;
+            this.objectListView1.View = System.Windows.Forms.View.Details;
+            this.objectListView1.SelectionChanged += new System.EventHandler(this.objectListView1_SelectionChanged);
+            // 
+            // olvColumn1
+            // 
+            this.olvColumn1.Text = "#";
+            // 
+            // olvColumn2
+            // 
+            this.olvColumn2.FillsFreeSpace = true;
+            this.olvColumn2.Text = "Summary";
+            this.olvColumn2.Width = 632;
+            // 
+            // olvColumn3
+            // 
+            this.olvColumn3.Text = "Opened By";
+            this.olvColumn3.Width = 72;
+            // 
+            // olvColumn4
+            // 
+            this.olvColumn4.Text = "Assigned To";
+            this.olvColumn4.Width = 72;
+            // 
             // IssueBrowserDialog
             // 
             this.AcceptButton = this.BtnOk;
@@ -223,12 +236,12 @@ namespace TurtleHub
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.BtnCancel;
             this.ClientSize = new System.Drawing.Size(849, 487);
+            this.Controls.Add(this.objectListView1);
             this.Controls.Add(this.TxtSearch);
             this.Controls.Add(label1);
             this.Controls.Add(this.BtnShowGithub);
             this.Controls.Add(statusStrip);
             this.Controls.Add(this.BtnReload);
-            this.Controls.Add(this.listView1);
             this.Controls.Add(this.BtnCancel);
             this.Controls.Add(this.BtnOk);
             this.Font = new System.Drawing.Font("Tahoma", 8.25F);
@@ -238,6 +251,7 @@ namespace TurtleHub
             this.Text = "Issues for {0}";
             statusStrip.ResumeLayout(false);
             statusStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -248,15 +262,15 @@ namespace TurtleHub
         private System.Windows.Forms.Button BtnOk;
         private System.Windows.Forms.Button BtnCancel;
         private System.Windows.Forms.Button BtnReload;
-        private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
         private System.Windows.Forms.ToolStripStatusLabel workStatus;
-        private System.Windows.Forms.ColumnHeader numberColumn;
-        private System.Windows.Forms.ColumnHeader summaryColumn;
-        private System.Windows.Forms.ColumnHeader openedbyColumn;
-        private System.Windows.Forms.ColumnHeader assignedtoColumn;
         private System.Windows.Forms.NotifyIcon updateNotifyIcon;
         private System.Windows.Forms.Button BtnShowGithub;
         private System.Windows.Forms.TextBox TxtSearch;
+        private BrightIdeasSoftware.ObjectListView objectListView1;
+        private BrightIdeasSoftware.OLVColumn olvColumn1;
+        private BrightIdeasSoftware.OLVColumn olvColumn2;
+        private BrightIdeasSoftware.OLVColumn olvColumn3;
+        private BrightIdeasSoftware.OLVColumn olvColumn4;
     }
 }
