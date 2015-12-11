@@ -32,7 +32,6 @@ namespace TurtleHub
             using (StreamWriter w = File.AppendText(@"TurtleHub.log"))
             {
                 w.WriteLine(message);
-                w.Close();
             }
 #endif
         }

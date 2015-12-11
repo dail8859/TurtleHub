@@ -157,10 +157,7 @@ namespace TurtleHub
             //var response = await client.Connection.Get<object>(new Uri(latestAsset[0].Url), new Dictionary<string, string>(), "application/octet-stream");
         }
 
-        public IList<Issue> IssuesFixed
-        {
-            get { return issuelistview.CheckedObjects; }
-        }
+        public IList<Issue> IssuesFixed { get { return issuelistview.CheckedObjects; } }
 
         private void ShowIssues()
         {
