@@ -249,6 +249,7 @@ namespace TurtleHub
             this.Name = "IssueBrowserDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Issues for {0}";
+            this.Load += new System.EventHandler(this.IssueBrowserDialog_Load);
             statusStrip.ResumeLayout(false);
             statusStrip.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.objectListView1)).EndInit();

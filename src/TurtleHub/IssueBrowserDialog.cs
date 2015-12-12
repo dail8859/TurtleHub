@@ -33,6 +33,7 @@ using System.Diagnostics;
 using Octokit;
 using BrightIdeasSoftware;
 using System.Collections.ObjectModel;
+using System.Threading.Tasks;
 
 namespace TurtleHub
 {
@@ -40,7 +41,7 @@ namespace TurtleHub
     {
         private IReadOnlyCollection<Issue> issues;
         private Parameters parameters;
-        private Release latest_release = null;
+        private Release latest_release;
         private GitHubClient client;
         private TypedObjectListView<Issue> issuelistview;
 
@@ -67,9 +68,6 @@ namespace TurtleHub
 
             // Start the GitHub magic
             client = new GitHubClient(new ProductHeaderValue("TurtleHub"));
-            CheckAuthorization();
-            MakeIssuesRequest();
-            CheckForUpdate();
         }
 
         private void CheckAuthorization()
@@ -89,14 +87,15 @@ namespace TurtleHub
                 if (dictionary.ContainsKey(client.BaseAddress.AbsoluteUri))
                 {
                     Logger.LogMessage("\tFound token for " + client.BaseAddress.AbsoluteUri);
+                    // TODO: make sure it is valid?
                     client.Credentials = new Credentials(dictionary[client.BaseAddress.AbsoluteUri]);
                 }
             }
         }
 
-        private async void MakeIssuesRequest()
+        private async Task MakeIssuesRequest()
         {
-            Logger.LogMessageWithData("StartIssuesRequest()");
+            Logger.LogMessageWithData("MakeIssuesRequest()");
 
             TxtSearch.Text = "";
             TxtSearch.Enabled = false;
@@ -169,9 +168,9 @@ namespace TurtleHub
 
         private void BtnReload_Click(object sender, EventArgs e)
         {
-            Logger.LogMessage("Reload issues");
-            BtnShowGithub.Enabled = false;
-            MakeIssuesRequest();
+            //Logger.LogMessage("Reload issues");
+            //BtnShowGithub.Enabled = false;
+            //MakeIssuesRequest();
         }
 
         private void TxtSearch_TextChanged(object sender, EventArgs e)
@@ -219,6 +218,26 @@ namespace TurtleHub
         private void objectListView1_SelectionChanged(object sender, EventArgs e)
         {
             BtnShowGithub.Enabled = objectListView1.SelectedObject != null;
+        }
+
+        private async void IssueBrowserDialog_Load(object sender, EventArgs e)
+        {
+            try
+            {
+                CheckAuthorization();
+                await MakeIssuesRequest();
+            }
+            catch (Exception ex)
+            {
+                // Something went wrong :(
+                Logger.LogMessage("exception");
+                TxtSearch.Text = "";
+                TxtSearch.Enabled = false;
+                BtnReload.Enabled = false;
+                workStatus.Visible = false;
+                statusLabel.ForeColor = Color.Red;
+                statusLabel.Text = "Error: " + ex.Message;
+            }
         }
     }
 }
