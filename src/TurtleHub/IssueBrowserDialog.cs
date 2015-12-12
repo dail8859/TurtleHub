@@ -161,9 +161,12 @@ namespace TurtleHub
         private void ShowIssues()
         {
             // Create a new filter based on the searchbox
-            var filter = TextMatchFilter.Contains(objectListView1, TxtSearch.Text);
-            objectListView1.ModelFilter = filter;
-            objectListView1.DefaultRenderer = new HighlightTextRenderer(filter);
+            var tmfilter = TextMatchFilter.Contains(objectListView1, TxtSearch.Text);
+            var prfilter = new ModelFilter(delegate(object x) { return ((Issue)x).PullRequest == null; });
+            var combfilter = new CompositeAllFilter(new List<IModelFilter> { tmfilter, prfilter });
+
+            objectListView1.ModelFilter = combfilter;
+            objectListView1.DefaultRenderer = new HighlightTextRenderer(tmfilter);
         }
 
         private void BtnReload_Click(object sender, EventArgs e)
