@@ -66,9 +66,10 @@ namespace TurtleHub
 
                 TxtRepository.AutoCompleteCustomSource = repo_list;
             }
-            catch(ApiException)
+            catch
             {
                 // Let this silently fail, the user just won't have an autocomplete list
+                // This could be due to no network connection, invalid username, etc
             }
         }
     }

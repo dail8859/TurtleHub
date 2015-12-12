@@ -53,17 +53,27 @@ namespace TurtleHub
         public Parameters() : base() {}
         public Parameters(string parameters) : base()
         {
-            var dict = parameters.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
-               .Select(part => part.Split('='))
-               .ToDictionary(split => split[0], split => split[1]);
+            Dictionary<string, string> dict;
 
+            try
+            {
+                dict = parameters.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(part => part.Split('='))
+                    .ToDictionary(split => split[0], split => split[1]);
+            }
+            catch
+            {
+                throw new ArgumentException("Invalid parameters string.");
+            }
+
+            // Is there an easier way?
             foreach(var item in dict)
                 this[item.Key] = item.Value;
         }
 
         public override string ToString()
         {
-            // NOTE: make sure this string is formatted in a way that is acceptable to the constructor
+            // NOTE: make sure this string is formatted in a way that is acceptable to the constructor!
             return string.Join(";", this.Select(x => x.Key + "=" + x.Value));
         }
     }

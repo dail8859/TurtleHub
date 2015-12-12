@@ -91,8 +91,8 @@ namespace TurtleHub
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "TurtleHub Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                throw;
+                MessageBox.Show(ex.Message, "TurtleHub Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return String.Empty;
             }
         }
 
@@ -113,6 +113,7 @@ namespace TurtleHub
             foreach (var path in pathList) Logger.LogMessageWithData("OnCommitFinished: pathList: " + path);
             Logger.LogMessageWithData("OnCommitFinished: " + logMessage);
             Logger.LogMessageWithData("OnCommitFinished: " + revision);
+
             return null;
         }
 
@@ -124,47 +125,81 @@ namespace TurtleHub
 
         public string ShowOptionsDialog(IntPtr hParentWnd, string parameters)
         {
-            Logger.LogMessageWithData("ShowOptionsDialog:" + parameters);
+            Logger.LogMessageWithData("ShowOptionsDialog: " + parameters);
+            Parameters parms;
 
-            OptionsDialog form = new OptionsDialog(new Parameters(parameters));
-            if (form.ShowDialog(WindowHandleWrapper.TryCreate(hParentWnd)) == DialogResult.OK)
-                return form.Params.ToString();
-            else // just return the original value
+            try
+            {
+                parms = new Parameters(parameters);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "TurtleHub", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return parameters;
+            }
+
+            OptionsDialog form = new OptionsDialog(parms);
+            if (form.ShowDialog(WindowHandleWrapper.TryCreate(hParentWnd)) == DialogResult.OK) return form.Params.ToString();
+            else return parameters;
         }
+
         public bool ValidateParameters(IntPtr hParentWnd, string parameters)
         {
-            Logger.LogMessageWithData("ValidateParameters:" + parameters);
-            Parameters p = new Parameters(parameters);
+            Logger.LogMessageWithData("ValidateParameters: " + parameters);
+            Parameters parms;
+            Repository repo;
 
-            if (p.Owner.Length == 0 || p.Repository.Length == 0)
+            try
             {
-                MessageBox.Show("Invalid settings.", "TurtleHub", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                parms = new Parameters(parameters);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "TurtleHub", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
-            Repository repo;
+            if (parms.Owner.Length == 0 || parms.Repository.Length == 0)
+            {
+                MessageBox.Show("Invalid parameters.", "TurtleHub", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                return false;
+            }
+
             try
             {
                 var client = new GitHubClient(new ProductHeaderValue("TurtleHub"));
-                var task = client.Repository.Get(p.Owner, p.Repository);
+                var task = client.Repository.Get(parms.Owner, parms.Repository);
                 task.Wait();
                 repo = task.Result;
             }
-            catch(Exception)
+            catch(AggregateException aex)
             {
-                var res = MessageBox.Show("The repository could not be verified. Continue anyways?", "TurtleHub", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                return res == DialogResult.Yes;
+                // NOTE: since we are waiting on the task, an AggregateException is thrown instead of just an ApiExcpetion
+                foreach (Exception ex in aex.InnerExceptions)
+                {
+                    if(ex is NotFoundException)
+                    {
+                        if (((NotFoundException)ex).HttpResponse.StatusCode == HttpStatusCode.NotFound)
+                        {
+                            var res = MessageBox.Show("This repository cannot be found on the server. Continue anyways?", "TurtleHub", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
+                            return res == DialogResult.Yes;
+                        }
+                    }
+                }
+
+                // Some other exception happend. Silently fail, not a big deal
+                return true;
             }
 
+            // Do a bit more to validate it
             if (!repo.HasIssues)
             {
-                var res = MessageBox.Show("This Repository doesn't seem to have issues. Continue anyways?", "TurtleHub", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var res = MessageBox.Show("This repository doesn't allow issues to be created. Continue anyways?", "TurtleHub", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (res == DialogResult.No) return false;
             }
-            else if(repo.OpenIssuesCount == 0)
+            else if (repo.OpenIssuesCount == 0)
             {
-                var res = MessageBox.Show("This Repository doesn't have any open issues. Continue anyways?", "TurtleHub", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var res = MessageBox.Show("This repository doesn't have any open issues. Continue anyways?", "TurtleHub", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 if (res == DialogResult.No) return false;
             }
 
