@@ -206,6 +206,7 @@ namespace TurtleHub
             this.objectListView1.TabIndex = 1;
             this.objectListView1.UseAlternatingBackColors = true;
             this.objectListView1.UseCompatibleStateImageBehavior = false;
+            this.objectListView1.UseHotControls = false;
             this.objectListView1.View = System.Windows.Forms.View.Details;
             this.objectListView1.SelectionChanged += new System.EventHandler(this.objectListView1_SelectionChanged);
             // 
