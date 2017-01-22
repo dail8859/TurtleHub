@@ -135,6 +135,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Utilities.cs" />
     <Compile Include="WindowHandleWrapper.cs" />
   </ItemGroup>
   <ItemGroup>

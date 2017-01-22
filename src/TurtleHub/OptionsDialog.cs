@@ -72,5 +72,9 @@ namespace TurtleHub
                 // This could be due to no network connection, invalid username, etc
             }
         }
+
+        private async void OptionsDialog_Load(object sender, EventArgs e)
+        {
+        }
     }
 }

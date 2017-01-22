@@ -41,6 +41,33 @@
             label3 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new System.Drawing.Point(12, 15);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(41, 13);
+            label1.TabIndex = 4;
+            label1.Text = "Owner:";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(12, 41);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(60, 13);
+            label2.TabIndex = 5;
+            label2.Text = "Repository:";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(12, 67);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(51, 13);
+            label3.TabIndex = 9;
+            label3.Text = "Keyword:";
+            // 
             // BtnOk
             // 
             this.BtnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
@@ -60,24 +87,6 @@
             this.BtnCancel.TabIndex = 4;
             this.BtnCancel.Text = "Cancel";
             this.BtnCancel.UseVisualStyleBackColor = true;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new System.Drawing.Point(12, 15);
-            label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(41, 13);
-            label1.TabIndex = 4;
-            label1.Text = "Owner:";
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(12, 41);
-            label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(60, 13);
-            label2.TabIndex = 5;
-            label2.Text = "Repository:";
             // 
             // TxtOwner
             // 
@@ -115,15 +124,6 @@
             this.CmbKeyword.Size = new System.Drawing.Size(178, 21);
             this.CmbKeyword.TabIndex = 2;
             // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new System.Drawing.Point(12, 67);
-            label3.Name = "label3";
-            label3.Size = new System.Drawing.Size(51, 13);
-            label3.TabIndex = 9;
-            label3.Text = "Keyword:";
-            // 
             // OptionsDialog
             // 
             this.AcceptButton = this.BtnOk;
@@ -143,6 +143,7 @@
             this.Name = "OptionsDialog";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Repository Settings";
+            this.Load += new System.EventHandler(this.OptionsDialog_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

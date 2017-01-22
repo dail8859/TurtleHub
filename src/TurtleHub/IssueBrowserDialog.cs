@@ -70,27 +70,21 @@ namespace TurtleHub
             client = new GitHubClient(new ProductHeaderValue("TurtleHub"));
         }
 
-        private void CheckAuthorization()
+        private void GetCredentials()
         {
-            string appDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            string filePath = Path.Combine(appDataFolder, "TurtleHub", "tokens.txt");
-
-            Logger.LogMessage("\t" + filePath);
-
-            if (File.Exists(filePath))
+            string token = Utilities.GetStoredAPIToken(client.BaseAddress.AbsoluteUri);
+            if (token != null)
             {
-                Logger.LogMessage("\tFound token file");
-
-                var tokenfile = File.ReadAllLines(filePath);
-                Dictionary<string, string> dictionary = new List<string>(tokenfile).ToDictionary(s => s.Split('=')[0], s => s.Split('=')[1]);
-
-                if (dictionary.ContainsKey(client.BaseAddress.AbsoluteUri))
-                {
-                    Logger.LogMessage("\tFound token for " + client.BaseAddress.AbsoluteUri);
-                    // TODO: make sure it is valid?
-                    client.Credentials = new Credentials(dictionary[client.BaseAddress.AbsoluteUri]);
-                }
+                client.Credentials = new Credentials(token);
+#if DEBUG
+                // Make sure the API token is valid
+                if (Utilities.CheckCurrentCredentials(client) == false)
+                    throw new Exception("API Token is not valid");
+                else
+                    Logger.LogMessage("API Token is valid");
+#endif
             }
+            // else just use unauthenticated requests
         }
 
         private async Task MakeIssuesRequest()
@@ -233,23 +227,36 @@ namespace TurtleHub
             BtnShowGithub.Enabled = objectListView1.SelectedObject != null;
         }
 
+        private void ShowErrorMessage(string error)
+        {
+            TxtSearch.Text = "";
+            TxtSearch.Enabled = false;
+            BtnReload.Enabled = false;
+            workStatus.Visible = false;
+            statusLabel.ForeColor = Color.Red;
+            statusLabel.Text = "Error: " + error;
+
+            MessageBox.Show(error, "TurtleHub", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
         private async void IssueBrowserDialog_Load(object sender, EventArgs e)
         {
             try
             {
-                CheckAuthorization();
+                GetCredentials();
                 await MakeIssuesRequest();
+            }
+            catch (RateLimitExceededException ex)
+            {
+                Logger.LogMessage("RateLimitExceededException: " + ex.Message);
+                ShowErrorMessage(ex.Message);
+                // if (client.Credentials.AuthenticationType == AuthenticationType.Anonymous)
+                // TODO: display dialog to create new api token
             }
             catch (Exception ex)
             {
-                // Something went wrong :(
-                Logger.LogMessage("exception");
-                TxtSearch.Text = "";
-                TxtSearch.Enabled = false;
-                BtnReload.Enabled = false;
-                workStatus.Visible = false;
-                statusLabel.ForeColor = Color.Red;
-                statusLabel.Text = "Error: " + ex.Message;
+                Logger.LogMessage(ex.Message);
+                ShowErrorMessage(ex.Message);
             }
         }
     }

@@ -22,6 +22,7 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
+using System.Linq;
 
 using Octokit;
 
@@ -77,17 +78,7 @@ namespace TurtleHub
                 if (form.ShowDialog(WindowHandleWrapper.TryCreate(hParentWnd)) != DialogResult.OK)
                     return originalMessage;
 
-                StringBuilder result = new StringBuilder(originalMessage);
-                if (originalMessage.Length != 0 && !originalMessage.EndsWith("\n"))
-                    result.AppendLine();
-
-                foreach (Issue issue in form.IssuesFixed)
-                {
-                    result.AppendFormat("{0} #{1}", parms.Keyword, issue.Number);
-                    result.AppendLine();
-                }
-
-                return result.ToString();
+                return String.Join(", ", form.IssuesFixed.Select(issue => String.Format("{0} #{1}", parms.Keyword, issue.Number)));
             }
             catch (Exception ex)
             {

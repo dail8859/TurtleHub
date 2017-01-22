@@ -9,7 +9,7 @@
 Obviously, [TortoiseGit](https://tortoisegit.org/) must be installed. Once TurtleHub is installed, right-click and go to `TortoiseGit > Settings > Issue Tracker Integration` and click `Add...`. TurtleHub should show up under the `Providers` dropdown menu. The `Working Tree Path` should be set to the directory of a local git repository. Click `Options` and add the owner and repository name located on GitHub.
 
 ## Development
-The code is developed using Visual Studio 2013. In order to develop TurtleHub, first use one of the installers and keep the default installation directory. When Visual Studio builds the new it will copy over the installed files.
+The code is developed using Visual Studio 2013. In order to develop TurtleHub, first use one of the installers and keep the default installation directory. When Visual Studio builds the new DLL it will copy over the installed files.
 
 Running the `build.cmd` batch file will build the installers and place them in the `bin` directory.
 
