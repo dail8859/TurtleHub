@@ -96,9 +96,7 @@ namespace TurtleHub
         private async Task MakeIssuesRequest()
         {
             Logger.LogMessageWithData("MakeIssuesRequest()");
-
             TxtSearch.Text = "";
-            TxtSearch.Enabled = false;
             BtnReload.Enabled = false;
             workStatus.Visible = true;
             statusLabel.Text = "Downloading\x2026";
@@ -109,14 +107,29 @@ namespace TurtleHub
             Logger.LogMessage(string.Format("\tRate limit: {0}/{1}", ratelimit.Resources.Core.Remaining.ToString(), ratelimit.Resources.Core.Limit.ToString()));
 #endif
 
-            issues = await client.Issue.GetAllForRepository(parameters.Owner, parameters.Repository);
-            Logger.LogMessage("\tGot " + issues.Count().ToString() + " issues");
+            var pager = new ApiOptions
+            {
+                PageSize = 50,
+                StartPage = 1,
+                PageCount = 1
+            };
 
-            objectListView1.SetObjects(issues);
-            objectListView1.UseFiltering = true;
-            objectListView1.FullRowSelect = true; // appearantly this is important to do after SetObjects()
+            do
+            {
+                issues = await client.Issue.GetAllForRepository(parameters.Owner, parameters.Repository, pager);
+                Logger.LogMessage("\tGot " + issues.Count().ToString() + " issues");
 
-            ShowIssues();
+                if (issues.Count() == 0)
+                    break;
+
+                objectListView1.AddObjects(issues.ToArray());
+                objectListView1.UseFiltering = true;
+                objectListView1.FullRowSelect = true; // appearantly this is important to do
+                ShowIssues();
+
+                // Move to the next page
+                pager.StartPage += 1;
+            } while (true);
 
 #if DEBUG
             ratelimit = await client.Miscellaneous.GetRateLimits();
@@ -124,7 +137,6 @@ namespace TurtleHub
 #endif
 
             BtnReload.Enabled = true;
-            TxtSearch.Enabled = true;
             workStatus.Visible = false;
             statusLabel.Text = "Ready";
         }
@@ -136,8 +148,7 @@ namespace TurtleHub
 
             // Check to see if there is an update for TurtleHub
             Logger.LogMessageWithData("Checking for new TurtleHub release");
-            var releases = await client.Release.GetAll("dail8859", "TurtleHub");
-            var latest = await client.Release.Get("dail8859", "TurtleHub", releases[0].Id);
+            var latest = await client.Repository.Release.GetLatest("dail8859", "TurtleHub");
             Logger.LogMessage("\tFound " + latest.TagName);
 
             var thatVersion = Version.Parse(latest.TagName.Substring(1)); // remove the v from e.g. v0.1.1
@@ -153,7 +164,6 @@ namespace TurtleHub
             }
 
             latest_release = latest;
-            //var response = await client.Connection.Get<object>(new Uri(latestAsset[0].Url), new Dictionary<string, string>(), "application/octet-stream");
         }
 
         public IList<Issue> IssuesFixed { get { return issuelistview.CheckedObjects; } }

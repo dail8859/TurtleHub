@@ -48,10 +48,9 @@ namespace TurtleHub
         {
             this.components = new System.ComponentModel.Container();
             System.Windows.Forms.StatusStrip statusStrip;
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(IssueBrowserDialog));
             System.Windows.Forms.Label label1;
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.workStatus = new System.Windows.Forms.ToolStripStatusLabel();
+            this.workStatus = new System.Windows.Forms.ToolStripProgressBar();
             this.BtnOk = new System.Windows.Forms.Button();
             this.BtnCancel = new System.Windows.Forms.Button();
             this.BtnReload = new System.Windows.Forms.Button();
@@ -84,7 +83,7 @@ namespace TurtleHub
             // 
             this.statusLabel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(835, 17);
+            this.statusLabel.Size = new System.Drawing.Size(77, 17);
             this.statusLabel.Spring = true;
             this.statusLabel.Text = "Ready";
             this.statusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -92,11 +91,10 @@ namespace TurtleHub
             // workStatus
             // 
             this.workStatus.AutoSize = false;
-            this.workStatus.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.workStatus.Image = ((System.Drawing.Image)(resources.GetObject("workStatus.Image")));
-            this.workStatus.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+            this.workStatus.MarqueeAnimationSpeed = 10;
             this.workStatus.Name = "workStatus";
-            this.workStatus.Size = new System.Drawing.Size(50, 17);
+            this.workStatus.Size = new System.Drawing.Size(725, 16);
+            this.workStatus.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.workStatus.Visible = false;
             // 
             // label1
@@ -193,8 +191,6 @@ namespace TurtleHub
             this.objectListView1.GridLines = true;
             this.objectListView1.HasCollapsibleGroups = false;
             this.objectListView1.HideSelection = false;
-            this.objectListView1.HighlightBackgroundColor = System.Drawing.Color.Empty;
-            this.objectListView1.HighlightForegroundColor = System.Drawing.Color.Empty;
             this.objectListView1.Location = new System.Drawing.Point(0, 33);
             this.objectListView1.MultiSelect = false;
             this.objectListView1.Name = "objectListView1";
@@ -265,7 +261,6 @@ namespace TurtleHub
         private System.Windows.Forms.Button BtnCancel;
         private System.Windows.Forms.Button BtnReload;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
-        private System.Windows.Forms.ToolStripStatusLabel workStatus;
         private System.Windows.Forms.NotifyIcon updateNotifyIcon;
         private System.Windows.Forms.Button BtnShowGithub;
         private System.Windows.Forms.TextBox TxtSearch;
@@ -274,5 +269,6 @@ namespace TurtleHub
         private BrightIdeasSoftware.OLVColumn olvColumn2;
         private BrightIdeasSoftware.OLVColumn olvColumn3;
         private BrightIdeasSoftware.OLVColumn olvColumn4;
+        private System.Windows.Forms.ToolStripProgressBar workStatus;
     }
 }

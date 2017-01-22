@@ -123,29 +123,6 @@
   <metadata name="statusStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
   </metadata>
-  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="workStatus.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
-    <value>
-        R0lGODlhLQALAMQAAP///+r76tz43O/v79X21tb21831zsDywbnwurjwuavtrJ3rnprqnJTplXDhcr6+
-        vmjgarOzs6yrpqyrpzXVOIGBgX9+fXd3d2hoaP8A/wAAAAAAAAAAAAAAAAAAAAAAACH/C05FVFNDQVBF
-        Mi4wAwEAAAAh+QQFCQAZACwAAAAALQALAAAFVWA2WVhpnmiqrmgmXU8sz3Rt3zQWWfHg/8CgcEgEPiqY
-        hw/AbDqf0KiU6Sspp9gsdmAdaL9gADfpDZul4+t57eTyluy1zzK5FO94/EXiIrH+gCt0GSEAIfkEBQkA
-        GQAsBAADAA4ABQAABRrgIY5Zppxoo66l475QLJdUba9s9r4jaaKnEAAh+QQFCQAZACwEAAMAFgAFAAAF
-        KiAhjll2nGiprGzivmUjz6Vj30yul1Dvl5Sg8AXLzGiZ221EMqFOKtYqBAAh+QQFCQAZACwEAAMAHgAF
-        AAAFOmAgjllGnGh5rGypvLAgz2Vi32Wj76Xj/4agsMQoGkuQpLJEaTpntMwNl9nxMr/fiGRCnVSslQv2
-        CgEAIfkEBQkAGQAsBAADACYABQAABUMgII5iYJ5ZRqxserxwqsw0SQp4niZ8nzbAYMpBLNpGhqQyxWg6
-        U5CoNEWpWo+inC7T82WCwkzRiD2hVKyVC/aS0WYhACH5BAUJABkALAwAAwAeAAUAAAU0ICCOYmCeWUas
-        bHq8MEkKdJ0meJ42fC+PhqAwxSgaU5Ck8ieq2TI5XabnY55QKtbKBXuFAAAh+QQFCQAZACwUAAMAFgAF
-        AAAFJCAgjmJgnlmmrCxJCnCcOnTtjkaup1Tv36KYLFOzAU8oFWsVAgAh+QQFCQAZACwcAAMADgAFAAAF
-        GqAijll2nKijrmXjvlQsl1Btr2z2viNpoqcQACH5BAUJABkALBQAAwAWAAUAAAUqoCKOWXacaFmsrOO+
-        ZSPPJWLfVK6XUO+Xi6DwBcvMaJnbbUQyoU4q1ioEACH5BAUJABkALAwAAwAeAAUAAAU6oCKOWXacaEms
-        bBm8sCPPZWPfZaLvpeD/lKCwBCkaS4yksmRoOme0zA2X2fEyv9+IZEKdVKyVC/YKAQAh+QQFCQAZACwE
-        AAMAJgAFAAAFRKAijll2nGhJrGwZvDAgz7Jj32Wj72Xi/yWBcEijUY7IEmTJLDGe0JJhSi3ObrjMjpf5
-        ATNDohUwIplQJxVr5YK9xoAQACH5BAUJABkALAQAAwAeAAUAAAU04CGOWUacaBmsLOC+biPPZWLfpaDv
-        MAz9wBJjSCwZjsjea0bL3HCZHU8JGJFMqJOKtaICQgAh+QQJCQAZACwAAAAALQALAAAFQWAmjmRpnmiq
-        rmzrvvCozLQY3LgI7HxsOsCgSEAs6ng934jCbIoM0OgRqSQFhZmiMYNMVmm1DC7H7VbP6LR6rQwBADs=
-</value>
-  </data>
   <metadata name="label1.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>
   </metadata>
