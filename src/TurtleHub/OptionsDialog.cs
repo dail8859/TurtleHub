@@ -73,7 +73,7 @@ namespace TurtleHub
             }
         }
 
-        private async void OptionsDialog_Load(object sender, EventArgs e)
+        private void OptionsDialog_Load(object sender, EventArgs e)
         {
         }
     }

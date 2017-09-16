@@ -39,7 +39,6 @@ namespace TurtleHub
 {
     partial class IssueBrowserDialog : Form
     {
-        private IReadOnlyCollection<Issue> issues;
         private Parameters parameters;
         private Release latest_release;
         private GitHubClient client;
@@ -95,44 +94,50 @@ namespace TurtleHub
             workStatus.Visible = true;
             statusLabel.Text = "Downloading\x2026";
 
-#if DEBUG
-            // The logging normally takes care of this but ifdef'ing this out keeps it from doing an unneeded rate limit check
-            var ratelimit = await client.Miscellaneous.GetRateLimits();
-            Logger.LogMessage(string.Format("\tRate limit: {0}/{1}", ratelimit.Resources.Core.Remaining.ToString(), ratelimit.Resources.Core.Limit.ToString()));
-#endif
-
-            var pager = new ApiOptions
+            var pagingOptions = new ApiOptions
             {
                 PageSize = 50,
                 StartPage = 1,
                 PageCount = 1
             };
+            MiscellaneousRateLimit ratelimit;
 
-            do
+            try
             {
-                issues = await client.Issue.GetAllForRepository(parameters.Owner, parameters.Repository, pager);
-                Logger.LogMessage("\tGot " + issues.Count().ToString() + " issues");
+#if DEBUG
+                // The logging normally takes care of this but ifdef'ing this out keeps it from doing an unneeded rate limit check
+                ratelimit = await client.Miscellaneous.GetRateLimits();
+                Logger.LogMessage(string.Format("\tRate limit: {0}/{1}", ratelimit.Resources.Core.Remaining.ToString(), ratelimit.Resources.Core.Limit.ToString()));
+#endif
 
-                if (issues.Count() == 0)
-                    break;
+                do
+                {
+                    IReadOnlyCollection<Issue> issues = await client.Issue.GetAllForRepository(parameters.Owner, parameters.Repository, pagingOptions);
+                    Logger.LogMessage("\tGot " + issues.Count().ToString() + " issues");
 
-                objectListView1.AddObjects(issues.ToArray());
-                objectListView1.UseFiltering = true;
-                objectListView1.FullRowSelect = true; // appearantly this is important to do
-                ShowIssues();
+                    if (issues.Count() == 0)
+                        break;
 
-                // Move to the next page
-                pager.StartPage += 1;
-            } while (true);
+                    objectListView1.AddObjects(issues.ToArray());
+                    objectListView1.UseFiltering = true;
+                    objectListView1.FullRowSelect = true; // appearantly this is important to do
+                    ShowIssues();
+
+                    // Move to the next page
+                    pagingOptions.StartPage += 1;
+                } while (true);
+            }
+            finally
+            {
+                BtnReload.Enabled = true;
+                workStatus.Visible = false;
+                statusLabel.Text = "Ready";
+            }
 
 #if DEBUG
             ratelimit = await client.Miscellaneous.GetRateLimits();
             Logger.LogMessage(string.Format("\tRate limit: {0}/{1}", ratelimit.Resources.Core.Remaining.ToString(), ratelimit.Resources.Core.Limit.ToString()));
 #endif
-
-            BtnReload.Enabled = true;
-            workStatus.Visible = false;
-            statusLabel.Text = "Ready";
         }
 
         private async void CheckForUpdate()

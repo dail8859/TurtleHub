@@ -83,7 +83,7 @@ namespace TurtleHub
             // 
             this.statusLabel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(77, 17);
+            this.statusLabel.Size = new System.Drawing.Size(835, 17);
             this.statusLabel.Spring = true;
             this.statusLabel.Text = "Ready";
             this.statusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;

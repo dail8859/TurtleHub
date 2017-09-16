@@ -119,7 +119,7 @@
             "Resolve",
             "Resolves",
             "Resolved"});
-            this.CmbKeyword.Location = new System.Drawing.Point(81, 64);
+            this.CmbKeyword.Location = new System.Drawing.Point(78, 64);
             this.CmbKeyword.Name = "CmbKeyword";
             this.CmbKeyword.Size = new System.Drawing.Size(178, 21);
             this.CmbKeyword.TabIndex = 2;
