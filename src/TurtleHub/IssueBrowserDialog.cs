@@ -197,8 +197,8 @@ namespace TurtleHub
         private void BtnShowGithub_Click(object sender, EventArgs e)
         {
             var issue = issuelistview.SelectedObject;
-            Logger.LogMessageWithData("Opening " + issue.HtmlUrl.AbsoluteUri);
-            Process.Start(issue.HtmlUrl.AbsoluteUri);
+            Logger.LogMessageWithData("Opening " + issue.HtmlUrl);
+            Process.Start(issue.HtmlUrl);
         }
 
         private void updateNotifyIcon_Click(object sender, EventArgs e)
