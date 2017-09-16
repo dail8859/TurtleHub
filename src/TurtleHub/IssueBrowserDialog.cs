@@ -17,22 +17,15 @@
 // Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using System.Xml;
-using System.Net;
-using System.IO;
 using System.Diagnostics;
 
 using Octokit;
 using BrightIdeasSoftware;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace TurtleHub

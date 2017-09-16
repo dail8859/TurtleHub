@@ -78,7 +78,14 @@ namespace TurtleHub
                 if (form.ShowDialog(WindowHandleWrapper.TryCreate(hParentWnd)) != DialogResult.OK)
                     return originalMessage;
 
-                return String.Join(", ", form.IssuesFixed.Select(issue => String.Format("{0} #{1}", parms.Keyword, issue.Number)));
+                if (parms.Keyword == "<None>" || parms.Keyword.Length == 0)
+                {
+                    return String.Join(", ", form.IssuesFixed.Select(issue => String.Format("#{0}", issue.Number)));
+                }
+                else
+                {
+                    return String.Join(", ", form.IssuesFixed.Select(issue => String.Format("{0} #{1}", parms.Keyword, issue.Number)));
+                }
             }
             catch (Exception ex)
             {
