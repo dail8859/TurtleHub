@@ -20,7 +20,6 @@ using Interop.BugTraqProvider;
 using System;
 using System.Net;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows.Forms;
 using System.Linq;
 
@@ -78,14 +77,7 @@ namespace TurtleHub
                 if (form.ShowDialog(WindowHandleWrapper.TryCreate(hParentWnd)) != DialogResult.OK)
                     return originalMessage;
 
-                if (parms.Keyword == "<None>" || parms.Keyword.Length == 0)
-                {
-                    return String.Join(", ", form.IssuesFixed.Select(issue => String.Format("#{0}", issue.Number)));
-                }
-                else
-                {
-                    return String.Join(", ", form.IssuesFixed.Select(issue => String.Format("{0} #{1}", parms.Keyword, issue.Number)));
-                }
+                return parms.CreateReferenceMessage(form.IssuesFixed.Select(issue => issue.Number).ToList());
             }
             catch (Exception ex)
             {

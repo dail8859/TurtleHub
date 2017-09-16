@@ -19,8 +19,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace TurtleHub
 {
@@ -50,6 +48,12 @@ namespace TurtleHub
             set { this["keyword"] = value; }
         }
 
+        public bool RefFullRepo
+        {
+            get { return this.ContainsKey("reffullrepo") ? Convert.ToBoolean(this["reffullrepo"]) : false; }
+            set { this["reffullrepo"] = Convert.ToString(value); }
+        }
+
         public Parameters() : base() {}
         public Parameters(string parameters) : base()
         {
@@ -69,6 +73,30 @@ namespace TurtleHub
             // Is there an easier way?
             foreach(var item in dict)
                 this[item.Key] = item.Value;
+        }
+
+        private string CreateIssueReference(int issue)
+        {
+            if (RefFullRepo)
+            {
+                return String.Format("{0}/{1}#{2}", Owner, Repository, issue);
+            }
+            else
+            {
+                return String.Format("#{0}", issue);
+            }
+        }
+
+        public string CreateReferenceMessage(IList<int> issues)
+        {
+            if (this.Keyword == "<None>" || this.Keyword.Length == 0)
+            {
+                return String.Join(", ", issues.Select(issue => CreateIssueReference(issue)));
+            }
+            else
+            {
+                return String.Join(", ", issues.Select(issue => String.Format("{0} {1}", this.Keyword, CreateIssueReference(issue))));
+            }
         }
 
         public override string ToString()

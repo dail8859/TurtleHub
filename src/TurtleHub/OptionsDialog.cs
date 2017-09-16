@@ -18,6 +18,7 @@
 
 using System;
 using System.Windows.Forms;
+using System.Collections.Generic;
 
 using Octokit;
 
@@ -33,6 +34,7 @@ namespace TurtleHub
                 p.Owner = TxtOwner.Text;
                 p.Repository = TxtRepository.Text;
                 p.Keyword = CmbKeyword.Text;
+                p.RefFullRepo = CheckRefFullRepo.Checked;
                 return p;
             }
         }
@@ -43,9 +45,15 @@ namespace TurtleHub
 
             TxtOwner.Text = parameters.Owner;
             TxtRepository.Text = parameters.Repository;
+            CheckRefFullRepo.Checked = parameters.RefFullRepo;
 
             int idx = CmbKeyword.FindString(parameters.Keyword);
             CmbKeyword.SelectedIndex = idx != -1 ? idx : 0;
+        }
+
+        private void PreviewMessage()
+        {
+            TxtPreview.Text = this.Params.CreateReferenceMessage(new List<int> { 42 });
         }
 
         private async void TxtRepository_Enter(object sender, EventArgs e)
@@ -75,6 +83,26 @@ namespace TurtleHub
 
         private void OptionsDialog_Load(object sender, EventArgs e)
         {
+        }
+
+        private void TxtOwner_TextChanged(object sender, EventArgs e)
+        {
+            PreviewMessage();
+        }
+
+        private void TxtRepository_TextChanged(object sender, EventArgs e)
+        {
+            PreviewMessage();
+        }
+
+        private void CheckRefFullRepo_Click(object sender, EventArgs e)
+        {
+            PreviewMessage();
+        }
+
+        private void CmbKeyword_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            PreviewMessage();
         }
     }
 }
