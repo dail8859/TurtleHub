@@ -171,7 +171,18 @@ namespace TurtleHub
         {
             // Create a new filter based on the searchbox
             var tmfilter = TextMatchFilter.Contains(objectListView1, TxtSearch.Text);
-            var prfilter = new ModelFilter(delegate(object x) { return ((Issue)x).PullRequest == null; });
+
+            ModelFilter prfilter;
+            if (checkBoxShowPrs.Checked == true)
+            {
+                // Keep everything
+                prfilter = new ModelFilter(delegate (object x) { return true; });
+            }
+            else
+            {
+                // Filter out pull requests
+                prfilter = new ModelFilter(delegate (object x) { return ((Issue)x).PullRequest == null; });
+            }
             var combfilter = new CompositeAllFilter(new List<IModelFilter> { tmfilter, prfilter });
 
             objectListView1.ModelFilter = combfilter;
@@ -263,6 +274,11 @@ namespace TurtleHub
                 Logger.LogMessage(ex.Message);
                 ShowErrorMessage(ex.Message);
             }
+        }
+
+        private void checkBoxShowPrs_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowIssues();
         }
     }
 }

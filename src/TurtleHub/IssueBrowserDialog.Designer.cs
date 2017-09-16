@@ -62,6 +62,7 @@ namespace TurtleHub
             this.olvColumn2 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn3 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
             this.olvColumn4 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
+            this.checkBoxShowPrs = new System.Windows.Forms.CheckBox();
             statusStrip = new System.Windows.Forms.StatusStrip();
             label1 = new System.Windows.Forms.Label();
             statusStrip.SuspendLayout();
@@ -226,6 +227,18 @@ namespace TurtleHub
             this.olvColumn4.Text = "Assigned To";
             this.olvColumn4.Width = 72;
             // 
+            // checkBoxShowPrs
+            // 
+            this.checkBoxShowPrs.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.checkBoxShowPrs.AutoSize = true;
+            this.checkBoxShowPrs.Location = new System.Drawing.Point(138, 436);
+            this.checkBoxShowPrs.Name = "checkBoxShowPrs";
+            this.checkBoxShowPrs.Size = new System.Drawing.Size(119, 17);
+            this.checkBoxShowPrs.TabIndex = 15;
+            this.checkBoxShowPrs.Text = "Show Pull Requests";
+            this.checkBoxShowPrs.UseVisualStyleBackColor = true;
+            this.checkBoxShowPrs.CheckedChanged += new System.EventHandler(this.checkBoxShowPrs_CheckedChanged);
+            // 
             // IssueBrowserDialog
             // 
             this.AcceptButton = this.BtnOk;
@@ -233,6 +246,7 @@ namespace TurtleHub
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.BtnCancel;
             this.ClientSize = new System.Drawing.Size(849, 487);
+            this.Controls.Add(this.checkBoxShowPrs);
             this.Controls.Add(this.objectListView1);
             this.Controls.Add(this.TxtSearch);
             this.Controls.Add(label1);
@@ -270,5 +284,6 @@ namespace TurtleHub
         private BrightIdeasSoftware.OLVColumn olvColumn3;
         private BrightIdeasSoftware.OLVColumn olvColumn4;
         private System.Windows.Forms.ToolStripProgressBar workStatus;
+        private System.Windows.Forms.CheckBox checkBoxShowPrs;
     }
 }
