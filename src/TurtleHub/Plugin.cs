@@ -77,7 +77,7 @@ namespace TurtleHub
                 if (form.ShowDialog(WindowHandleWrapper.TryCreate(hParentWnd)) != DialogResult.OK)
                     return originalMessage;
 
-                return parms.CreateReferenceMessage(form.IssuesFixed.Select(issue => issue.Number).ToList());
+                return originalMessage + parms.CreateReferenceMessage(form.IssuesFixed.Select(issue => issue.Number).ToList());
             }
             catch (Exception ex)
             {
