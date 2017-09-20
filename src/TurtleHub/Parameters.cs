@@ -54,6 +54,12 @@ namespace TurtleHub
             set { this["reffullrepo"] = Convert.ToString(value); }
         }
 
+        public bool ShowPrsByDefault
+        {
+            get { return this.ContainsKey("showprsbydefault") ? Convert.ToBoolean(this["showprsbydefault"]) : false; }
+            set { this["showprsbydefault"] = Convert.ToString(value); }
+        }
+
         public Parameters() : base() {}
         public Parameters(string parameters) : base()
         {

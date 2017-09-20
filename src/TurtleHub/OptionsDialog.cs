@@ -35,6 +35,7 @@ namespace TurtleHub
                 p.Repository = TxtRepository.Text;
                 p.Keyword = CmbKeyword.Text;
                 p.RefFullRepo = CheckRefFullRepo.Checked;
+                p.ShowPrsByDefault = CheckShowPrs.Checked;
                 return p;
             }
         }
@@ -46,6 +47,7 @@ namespace TurtleHub
             TxtOwner.Text = parameters.Owner;
             TxtRepository.Text = parameters.Repository;
             CheckRefFullRepo.Checked = parameters.RefFullRepo;
+            CheckShowPrs.Checked = parameters.ShowPrsByDefault;
 
             int idx = CmbKeyword.FindString(parameters.Keyword);
             CmbKeyword.SelectedIndex = idx != -1 ? idx : 0;

@@ -39,6 +39,7 @@
             this.CheckRefFullRepo = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.TxtPreview = new System.Windows.Forms.TextBox();
+            this.CheckShowPrs = new System.Windows.Forms.CheckBox();
             label1 = new System.Windows.Forms.Label();
             label2 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
@@ -76,7 +77,7 @@
             // 
             this.BtnOk.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.BtnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.BtnOk.Location = new System.Drawing.Point(210, 179);
+            this.BtnOk.Location = new System.Drawing.Point(210, 196);
             this.BtnOk.Name = "BtnOk";
             this.BtnOk.Size = new System.Drawing.Size(75, 23);
             this.BtnOk.TabIndex = 3;
@@ -87,7 +88,7 @@
             // 
             this.BtnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.BtnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.BtnCancel.Location = new System.Drawing.Point(291, 179);
+            this.BtnCancel.Location = new System.Drawing.Point(291, 196);
             this.BtnCancel.Name = "BtnCancel";
             this.BtnCancel.Size = new System.Drawing.Size(75, 23);
             this.BtnCancel.TabIndex = 4;
@@ -153,10 +154,10 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox1.Controls.Add(this.TxtPreview);
-            this.groupBox1.Location = new System.Drawing.Point(13, 124);
+            this.groupBox1.Location = new System.Drawing.Point(13, 141);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(353, 44);
             this.groupBox1.TabIndex = 11;
@@ -174,13 +175,24 @@
             this.TxtPreview.TabIndex = 0;
             this.TxtPreview.Text = "Closes #5";
             // 
+            // CheckShowPrs
+            // 
+            this.CheckShowPrs.AutoSize = true;
+            this.CheckShowPrs.Location = new System.Drawing.Point(78, 115);
+            this.CheckShowPrs.Name = "CheckShowPrs";
+            this.CheckShowPrs.Size = new System.Drawing.Size(172, 17);
+            this.CheckShowPrs.TabIndex = 12;
+            this.CheckShowPrs.Text = "Show Pull Requests by Default";
+            this.CheckShowPrs.UseVisualStyleBackColor = true;
+            // 
             // OptionsDialog
             // 
             this.AcceptButton = this.BtnOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.BtnCancel;
-            this.ClientSize = new System.Drawing.Size(374, 214);
+            this.ClientSize = new System.Drawing.Size(375, 231);
+            this.Controls.Add(this.CheckShowPrs);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.CheckRefFullRepo);
             this.Controls.Add(label3);
@@ -213,5 +225,6 @@
         private System.Windows.Forms.CheckBox CheckRefFullRepo;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox TxtPreview;
+        private System.Windows.Forms.CheckBox CheckShowPrs;
     }
 }

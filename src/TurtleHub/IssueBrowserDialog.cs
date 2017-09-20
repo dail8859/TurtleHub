@@ -49,6 +49,8 @@ namespace TurtleHub
 
             this.parameters = parameters;
 
+            checkBoxShowPrs.Checked = parameters.ShowPrsByDefault;
+
             Text = string.Format(Text, parameters.Repository);
 
             // Wrap the objectlistview and set the aspects appropriately
