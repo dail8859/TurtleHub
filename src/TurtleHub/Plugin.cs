@@ -77,6 +77,9 @@ namespace TurtleHub
                 if (form.ShowDialog(WindowHandleWrapper.TryCreate(hParentWnd)) != DialogResult.OK)
                     return originalMessage;
 
+                if (originalMessage.Length > 0 && !Char.IsWhiteSpace(originalMessage[originalMessage.Length - 1]))
+                    originalMessage += " ";
+
                 return originalMessage + parms.CreateReferenceMessage(form.IssuesFixed.Select(issue => issue.Number).ToList());
             }
             catch (Exception ex)
