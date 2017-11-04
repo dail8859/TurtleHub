@@ -2,11 +2,11 @@
 	### TurtleHub specific config
 	provideruuid = {B2C6EC0F-8742-4792-9FDC-10635D2C118C}
 	provideruuid64 = {B2C6EC0F-8742-4792-9FDC-10635D2C118B}
-	providerparams = "owner=dail8859;repository=TurtleHub;keyword=<None>;reffullrepo=True;showprsbydefault=True"
+	providerparams = "owner=dail8859;repository=TurtleHub;keyword=Closes;reffullrepo=True;showprsbydefault=True"
 
 
 	### general BugTraq config ###
-	
+
 	# Link issue numbers that are found in log browser messages to this URL:
 	url = https://github.com/dail8859/TurtleHub/issues/%BUGID%
 
