@@ -22,7 +22,7 @@ pushd "%~dp0"
 SetLocal EnableDelayedExpansion
 
 :: Check if the NuGet package exists
-if not exist ".\src\packages\Octokit.0.26.0" (
+if not exist ".\src\packages\Octokit.0.29.0" (
 	echo The NuGet packages seem to be missing.
 	echo Open TurtleHub.sln and open the menu "Tools / NuGet Package Manager / Package Manager Console" and run:
 	echo ^> Update-Package -reinstall
