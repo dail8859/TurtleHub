@@ -23,8 +23,6 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using System.Linq;
 
-using Octokit;
-
 namespace TurtleHub
 {
     [ComVisible(true)]
@@ -140,7 +138,7 @@ namespace TurtleHub
         {
             Logger.LogMessageWithData("ValidateParameters: " + parameters);
             Parameters parms;
-            Repository repo;
+            RepositoryMetrics metrics = null;
 
             try
             {
@@ -160,19 +158,22 @@ namespace TurtleHub
 
             try
             {
-                var client = new GitHubClient(new ProductHeaderValue("TurtleHub"));
-                var task = client.Repository.Get(parms.Owner, parms.Repository);
-                task.Wait();
-                repo = task.Result;
+                var tracker = IssueTrackerFactory.CreateIssueTracker(parms);
+                var task = tracker.GetRepositoryMetrics();
+                if (task != null)
+                {
+                    task.Wait();
+                    metrics = task.Result;
+                }
             }
             catch(AggregateException aex)
             {
                 // NOTE: since we are waiting on the task, an AggregateException is thrown instead of just an ApiExcpetion
                 foreach (Exception ex in aex.InnerExceptions)
                 {
-                    if(ex is NotFoundException)
+                    if(ex is Octokit.NotFoundException)
                     {
-                        if (((NotFoundException)ex).HttpResponse.StatusCode == HttpStatusCode.NotFound)
+                        if (((Octokit.NotFoundException)ex).HttpResponse.StatusCode == HttpStatusCode.NotFound)
                         {
                             var res = MessageBox.Show("This repository cannot be found on the server. Continue anyways?", "TurtleHub", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
                             return res == DialogResult.Yes;
@@ -184,16 +185,19 @@ namespace TurtleHub
                 return true;
             }
 
-            // Do a bit more to validate it
-            if (!repo.HasIssues)
+            if (metrics != null)
             {
-                var res = MessageBox.Show("This repository doesn't allow issues to be created. Continue anyways?", "TurtleHub", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (res == DialogResult.No) return false;
-            }
-            else if (repo.OpenIssuesCount == 0)
-            {
-                var res = MessageBox.Show("This repository doesn't have any open issues. Continue anyways?", "TurtleHub", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                if (res == DialogResult.No) return false;
+                // Do a bit more to validate it
+                if (!metrics.HasIssues)
+                {
+                    var res = MessageBox.Show("This repository doesn't allow issues to be created. Continue anyways?", "TurtleHub", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (res == DialogResult.No) return false;
+                }
+                else if (metrics.OpenIssues == 0)
+                {
+                    var res = MessageBox.Show("This repository doesn't have any open issues. Continue anyways?", "TurtleHub", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    if (res == DialogResult.No) return false;
+                }
             }
 
             return true;

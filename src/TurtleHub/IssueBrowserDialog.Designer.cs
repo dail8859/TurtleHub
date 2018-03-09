@@ -258,6 +258,7 @@ namespace TurtleHub
             this.Font = new System.Drawing.Font("Tahoma", 8.25F);
             this.MinimizeBox = false;
             this.Name = "IssueBrowserDialog";
+            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Issues for {0}";
             this.Load += new System.EventHandler(this.IssueBrowserDialog_Load);

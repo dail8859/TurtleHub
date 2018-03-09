@@ -24,7 +24,6 @@ using System.Text;
 using System.Windows.Forms;
 using System.Diagnostics;
 
-using Octokit;
 using BrightIdeasSoftware;
 using System.Threading.Tasks;
 
@@ -33,9 +32,9 @@ namespace TurtleHub
     partial class IssueBrowserDialog : Form
     {
         private Parameters parameters;
-        private Release latest_release;
-        private GitHubClient client;
-        private TypedObjectListView<Issue> issuelistview;
+        private Octokit.Release latest_release;
+        private IIssueTracker tracker;
+        private TypedObjectListView<TurtleIssue> issuelistview;
 
         public IssueBrowserDialog(Parameters parameters)
         {
@@ -54,31 +53,14 @@ namespace TurtleHub
             Text = string.Format(Text, parameters.Repository);
 
             // Wrap the objectlistview and set the aspects appropriately
-            issuelistview = new TypedObjectListView<Issue>(this.objectListView1);
-            issuelistview.GetColumn(0).AspectGetter = delegate(Issue x) { return x.Number; };
-            issuelistview.GetColumn(1).AspectGetter = delegate(Issue x) { return x.Title; };
-            issuelistview.GetColumn(2).AspectGetter = delegate(Issue x) { return x.User.Login; };
-            issuelistview.GetColumn(3).AspectGetter = delegate(Issue x) { return x.Assignee != null ? x.Assignee.Login : String.Empty; };
+            issuelistview = new TypedObjectListView<TurtleIssue>(this.objectListView1);
+            issuelistview.GetColumn(0).AspectGetter = delegate(TurtleIssue x) { return x.Number; };
+            issuelistview.GetColumn(1).AspectGetter = delegate(TurtleIssue x) { return x.Title; };
+            issuelistview.GetColumn(2).AspectGetter = delegate(TurtleIssue x) { return x.Creator; };
+            issuelistview.GetColumn(3).AspectGetter = delegate(TurtleIssue x) { return x.Assignee; };
 
-            // Start the GitHub magic
-            client = new GitHubClient(new ProductHeaderValue("TurtleHub"));
-        }
-
-        private void GetCredentials()
-        {
-            string token = Utilities.GetStoredAPIToken(client.BaseAddress.AbsoluteUri);
-            if (token != null)
-            {
-                client.Credentials = new Credentials(token);
-#if DEBUG
-                // Make sure the API token is valid
-                if (Utilities.CheckCurrentCredentials(client) == false)
-                    throw new Exception("API Token is not valid");
-                else
-                    Logger.LogMessage("API Token is valid");
-#endif
-            }
-            // else just use unauthenticated requests
+            // Start the tracker magic
+            tracker = IssueTrackerFactory.CreateIssueTracker(parameters);
         }
 
         private async Task MakeIssuesRequest()
@@ -89,38 +71,14 @@ namespace TurtleHub
             workStatus.Visible = true;
             statusLabel.Text = "Downloading\x2026";
 
-            var pagingOptions = new ApiOptions
-            {
-                PageSize = 50,
-                StartPage = 1,
-                PageCount = 1
-            };
-            MiscellaneousRateLimit ratelimit;
-
             try
             {
-#if DEBUG
-                // The logging normally takes care of this but ifdef'ing this out keeps it from doing an unneeded rate limit check
-                ratelimit = await client.Miscellaneous.GetRateLimits();
-                Logger.LogMessage(string.Format("\tRate limit: {0}/{1}", ratelimit.Resources.Core.Remaining.ToString(), ratelimit.Resources.Core.Limit.ToString()));
-#endif
+                var issues = await tracker.GetAllIssuesOnRepository();
+                objectListView1.AddObjects(issues.ToArray());
+                objectListView1.UseFiltering = true;
+                objectListView1.FullRowSelect = true; // appearantly this is important to do
+                ShowIssues();
 
-                do
-                {
-                    IReadOnlyCollection<Issue> issues = await client.Issue.GetAllForRepository(parameters.Owner, parameters.Repository, pagingOptions);
-                    Logger.LogMessage("\tGot " + issues.Count().ToString() + " issues");
-
-                    if (issues.Count() == 0)
-                        break;
-
-                    objectListView1.AddObjects(issues.ToArray());
-                    objectListView1.UseFiltering = true;
-                    objectListView1.FullRowSelect = true; // appearantly this is important to do
-                    ShowIssues();
-
-                    // Move to the next page
-                    pagingOptions.StartPage += 1;
-                } while (true);
             }
             finally
             {
@@ -128,17 +86,14 @@ namespace TurtleHub
                 workStatus.Visible = false;
                 statusLabel.Text = "Ready";
             }
-
-#if DEBUG
-            ratelimit = await client.Miscellaneous.GetRateLimits();
-            Logger.LogMessage(string.Format("\tRate limit: {0}/{1}", ratelimit.Resources.Core.Remaining.ToString(), ratelimit.Resources.Core.Limit.ToString()));
-#endif
         }
 
         private async void CheckForUpdate()
         {
             // Only check if we haven't checked before
             if (latest_release != null) return;
+
+            var client = new Octokit.GitHubClient(new Octokit.ProductHeaderValue("TurtleHub"));
 
             // Check to see if there is an update for TurtleHub
             Logger.LogMessageWithData("Checking for new TurtleHub release");
@@ -160,7 +115,7 @@ namespace TurtleHub
             latest_release = latest;
         }
 
-        public IList<Issue> IssuesFixed { get { return issuelistview.CheckedObjects; } }
+        public IList<TurtleIssue> IssuesFixed { get { return issuelistview.CheckedObjects; } }
 
         private void ShowIssues()
         {
@@ -176,7 +131,7 @@ namespace TurtleHub
             else
             {
                 // Filter out pull requests
-                prfilter = new ModelFilter(delegate (object x) { return ((Issue)x).PullRequest == null; });
+                prfilter = new ModelFilter(delegate (object x) { return !((TurtleIssue)x).IsPullRequest; });
             }
             var combfilter = new CompositeAllFilter(new List<IModelFilter> { tmfilter, prfilter });
 
@@ -254,15 +209,7 @@ namespace TurtleHub
         {
             try
             {
-                GetCredentials();
                 await MakeIssuesRequest();
-            }
-            catch (RateLimitExceededException ex)
-            {
-                Logger.LogMessage("RateLimitExceededException: " + ex.Message);
-                ShowErrorMessage(ex.Message);
-                // if (client.Credentials.AuthenticationType == AuthenticationType.Anonymous)
-                // TODO: display dialog to create new api token
             }
             catch (Exception ex)
             {

@@ -112,14 +112,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="GitHubIssueTracker.cs" />
     <Compile Include="IBugTraqProvider.cs" />
     <Compile Include="IBugTraqProvider2.cs" />
+    <Compile Include="IIssueTracker.cs" />
     <Compile Include="IssueBrowserDialog.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="IssueBrowserDialog.Designer.cs">
       <DependentUpon>IssueBrowserDialog.cs</DependentUpon>
     </Compile>
+    <Compile Include="IssueTrackerFactory.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="OptionsDialog.cs">
       <SubType>Form</SubType>
@@ -135,6 +138,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="RepositoryMetrics.cs" />
+    <Compile Include="TurtleIssue.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="WindowHandleWrapper.cs" />
   </ItemGroup>

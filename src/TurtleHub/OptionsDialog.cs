@@ -19,8 +19,7 @@
 using System;
 using System.Windows.Forms;
 using System.Collections.Generic;
-
-using Octokit;
+using System.Linq;
 
 namespace TurtleHub
 {
@@ -31,11 +30,13 @@ namespace TurtleHub
             get
             {
                 Parameters p = new Parameters();
+                p.Tracker = CmbTracker.Text ?? String.Empty;
                 p.Owner = TxtOwner.Text;
                 p.Repository = TxtRepository.Text;
                 p.Keyword = CmbKeyword.Text;
                 p.RefFullRepo = CheckRefFullRepo.Checked;
                 p.ShowPrsByDefault = CheckShowPrs.Checked;
+                p.APIToken = TxtAPIToken.Text;
                 return p;
             }
         }
@@ -44,12 +45,24 @@ namespace TurtleHub
         {
             InitializeComponent();
 
+            int idx = 0;
+            if (!String.IsNullOrEmpty(parameters.Tracker))
+            {
+                idx = CmbTracker.FindString(parameters.Tracker);
+                if (idx == -1)
+                {
+                    idx = CmbTracker.Items.Add(parameters.Tracker);
+                }
+            }
+            CmbTracker.SelectedIndex = idx;
+
             TxtOwner.Text = parameters.Owner;
             TxtRepository.Text = parameters.Repository;
             CheckRefFullRepo.Checked = parameters.RefFullRepo;
             CheckShowPrs.Checked = parameters.ShowPrsByDefault;
+            TxtAPIToken.Text = parameters.APIToken;
 
-            int idx = CmbKeyword.FindString(parameters.Keyword);
+            idx = CmbKeyword.FindString(parameters.Keyword);
             CmbKeyword.SelectedIndex = idx != -1 ? idx : 0;
         }
 
@@ -65,16 +78,15 @@ namespace TurtleHub
 
             try
             {
-                var github = new GitHubClient(new ProductHeaderValue("TurtleHub"));
-                var repos = await github.Repository.GetAllForUser(owner);
-
-                var repo_list = new AutoCompleteStringCollection();
-                foreach (var repo in repos)
+                var tracker = IssueTrackerFactory.CreateIssueTracker(Params);
+                if (tracker != null)
                 {
-                    repo_list.Add(repo.Name);
-                }
+                    var repos = await tracker.GetAllRepositories();
+                    var repo_list = new AutoCompleteStringCollection();
+                    repo_list.AddRange(repos.ToArray());
 
-                TxtRepository.AutoCompleteCustomSource = repo_list;
+                    TxtRepository.AutoCompleteCustomSource = repo_list;
+                }
             }
             catch
             {

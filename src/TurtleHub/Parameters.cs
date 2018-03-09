@@ -24,6 +24,12 @@ namespace TurtleHub
 {
     public class Parameters : Dictionary<string, string>
     {
+        public string Tracker
+        {
+            get { return this.ContainsKey("tracker") ? this["tracker"] : ""; }
+            set { this["tracker"] = value; }
+        }
+
         public string Owner
         {
             get { return this.ContainsKey("owner") ? this["owner"] : ""; }
@@ -58,6 +64,12 @@ namespace TurtleHub
         {
             get { return this.ContainsKey("showprsbydefault") ? Convert.ToBoolean(this["showprsbydefault"]) : false; }
             set { this["showprsbydefault"] = Convert.ToString(value); }
+        }
+
+        public string APIToken
+        {
+            get { return this.ContainsKey("apitoken") ? this["apitoken"] : ""; }
+            set { this["apitoken"] = value; }
         }
 
         public Parameters() : base() {}
