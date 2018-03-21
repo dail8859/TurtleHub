@@ -1,0 +1,107 @@
+<?xml version='1.0' encoding='windows-1252'?>
+<Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
+	<?include ..\VersionNumberInclude.wxi?>
+
+	<?if $(env.Platform)=x64 ?>
+	<?define Win64YesNo="yes" ?>
+	<?define UpgradeCode = "95FC7B29-1B5A-4843-B331-5FE64E86B670" ?>
+	<?define COMGuid = "{2F6F1277-D268-4AA5-8C6E-42B41914726E}" ?>
+	<?define cf="CommonFiles64Folder" ?>
+	<?else ?>
+	<?define Win64YesNo="no" ?>
+	<?define UpgradeCode = "9E05A369-5CDB-491B-8AAE-A9FB5EE23901" ?>
+	<?define COMGuid = "{2F6F1277-D268-4AA5-8C6E-42B41914726F}" ?>
+	<?define cf="CommonFilesFolder" ?>
+	<?endif ?>
+
+	<Product UpgradeCode="$(var.UpgradeCode)"
+		Name='TurtleLab $(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion) ($(env.Platform))'
+		Id='*' Language='1033' Codepage='1252'
+		Version='$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion)'
+		Manufacturer='TurtleLab'>
+
+	<Package Id='*' Keywords='Installer'
+		Description="IBugTraqProvider for GitLab"
+		Comments='http://github.com/dail8859/TurtleHub' Manufacturer='TurtleLab'
+		InstallerVersion='200' Languages='1033' Compressed='yes' SummaryCodepage='1252'
+		Platform='$(env.Platform)' />
+
+	<Icon Id="icon.ico" SourceFile="../../logos/TurtleLab.ico"/>
+	<Property Id="ARPPRODUCTICON" Value="icon.ico" />
+
+	<Upgrade Id="$(var.UpgradeCode)" >
+		<!-- flag is set if the install will trigger an upgrade of an existing install -->
+		<UpgradeVersion Property="PREVIOUSVERSIONSINSTALLED" Maximum="$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion)" IncludeMaximum="no" />
+	</Upgrade>
+
+	<Media Id='1' Cabinet='TurtleLab.cab' EmbedCab='yes' />
+	<Property Id="ALLUSERS">1</Property>
+	<Condition Message='This application only runs on Windows XP and later.'>VersionNT &gt;= 501</Condition>
+
+	<Directory Id='TARGETDIR' Name='SourceDir'>
+		<Directory Id='$(var.cf)' Name='Common'>
+			<Directory Id='INSTALLDIR' Name='TurtleLab' />
+		</Directory>
+	</Directory>
+
+	<DirectoryRef Id='INSTALLDIR'>
+		<Component Id='CoreComponent' Guid='F1815014-6319-41E9-AA3B-0C4B5B8DFE9D' Win64='$(var.Win64YesNo)'>
+			<?if $(env.Platform)=x64 ?>
+			<File Id='TurtleLab.DLL'       Name='TurtleLab.dll'      DiskId='1' Source='../TurtleLab/bin/x64/Release/TurtleLab.dll' Vital='yes' />
+			<File Id='TurtleLab.PDB'       Name='TurtleLab.pdb'      DiskId='1' Source='../TurtleLab/bin/x64/Release/TurtleLab.pdb' Vital='no' />
+			<File Id='GitLabApiClient.DLL' Name='GitLabApiClient.dll' DiskId='1' Source='../TurtleLab/bin/x64/Release/GitLabApiClient.dll' Vital='yes' />
+			<File Id='ObjectListView.DLL'  Name='ObjectListView.dll' DiskId='1' Source='../TurtleLab/bin/x64/Release/ObjectListView.dll' Vital='yes' />
+			<?else ?>
+			<File Id='TurtleLab.DLL'       Name='TurtleLab.dll'      DiskId='1' Source='../TurtleLab/bin/x86/Release/TurtleLab.dll' Vital='yes' />
+			<File Id='TurtleLab.PDB'       Name='TurtleLab.pdb'      DiskId='1' Source='../TurtleLab/bin/x86/Release/TurtleLab.pdb' Vital='no' />
+			<File Id='GitLabApiClient.DLL' Name='GitLabApiClient.dll' DiskId='1' Source='../TurtleLab/bin/x86/Release/GitLabApiClient.dll' Vital='yes' />
+			<File Id='ObjectListView.DLL'  Name='ObjectListView.dll' DiskId='1' Source='../TurtleLab/bin/x86/Release/ObjectListView.dll' Vital='yes' />
+			<?endif ?>
+
+			<File Id='LICENSE' Name='LICENSE' DiskId='1' Source='../../LICENSE' Vital='yes' />
+
+			<RegistryKey   Root="HKLM" Key="Software\Classes\TurtleLab.Plugin" Action="createAndRemoveOnUninstall" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\TurtleLab.Plugin" Value="TurtleLab $(var.MajorVersion).$(var.MinorVersion) (GitLab)" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\TurtleLab.Plugin\CLSID" Value="$(var.COMGuid)" Type="string" />
+
+			<RegistryKey   Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)" Action="createAndRemoveOnUninstall" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)" Value="TurtleLab $(var.MajorVersion).$(var.MinorVersion) (GitLab)" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Value="mscoree.dll" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Name="ThreadingModel" Value="Both" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Name="Class" Value="TurtleLab.Plugin" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Name="Assembly" Value="TurtleLab, Version=$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0, Culture=neutral, PublicKeyToken=null" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Name="RuntimeVersion" Value="v4.0.30319" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Name="CodeBase" Value="[INSTALLDIR]TurtleLab.dll" Type="string" />
+
+			<RegistryKey   Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0" Action="createAndRemoveOnUninstall" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0" Name="Class" Value="TurtleLab.Plugin" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0" Name="Assembly" Value="TurtleLab, Version=$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0, Culture=neutral, PublicKeyToken=null" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0" Name="RuntimeVersion" Value="v4.0.30319" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32\$(var.MajorVersion).$(var.MinorVersion).$(var.MicroVersion).0" Name="CodeBase" Value="[INSTALLDIR]TurtleLab.dll" Type="string" />
+
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\ProgId" Value="TurtleLab.Plugin" Type="string" />
+
+			<RegistryKey Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\Implemented Categories\{62C8FE65-4EBB-45E7-B440-6E39B2CDBF29}" Action="createAndRemoveOnUninstall" />
+			<RegistryKey Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\Implemented Categories\{3494FA92-B139-4730-9591-01135D5E7831}" Action="createAndRemoveOnUninstall" />
+		</Component>
+	</DirectoryRef>
+
+	<WixVariable Id="WixUILicenseRtf" Value="gpl-2.0.rtf" />
+	<WixVariable Id="WixUIBannerBmp" Value="TurtleLab\Banner.jpg" />
+	<WixVariable Id="WixUIDialogBmp" Value="TurtleLab\Dialog.jpg" />
+	<Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
+	<UIRef Id="WixUI_InstallDir" />
+
+	<Feature Id='Complete' Title='TurtleLab' Description='The complete package.' Display='expand' Level='1' ConfigurableDirectory='INSTALLDIR'>
+		<Feature Id='CoreComponent' Title='Binaries' Description='The core binaries.' Level='1'>
+			<ComponentRef Id='CoreComponent' />
+		</Feature>
+	</Feature>
+
+	<InstallExecuteSequence>
+		<AppSearch Sequence="1"></AppSearch>
+		<LaunchConditions After="AppSearch" />
+		<RemoveExistingProducts After="InstallValidate"><![CDATA[PREVIOUSVERSIONSINSTALLED]]></RemoveExistingProducts>
+	</InstallExecuteSequence>
+	</Product>
+</Wix>

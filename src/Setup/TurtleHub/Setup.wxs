@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='windows-1252'?>
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
-	<?include VersionNumberInclude.wxi?>
+	<?include ..\VersionNumberInclude.wxi?>
 
 	<?if $(env.Platform)=x64 ?>
 	<?define Win64YesNo="yes" ?>
@@ -21,7 +21,7 @@
 		Manufacturer='TurtleHub'>
 
 	<Package Id='*' Keywords='Installer'
-		Description="IBugTraqProvider for Github"
+		Description="IBugTraqProvider for GitHub"
 		Comments='http://github.com/dail8859/TurtleHub' Manufacturer='TurtleHub'
 		InstallerVersion='200' Languages='1033' Compressed='yes' SummaryCodepage='1252'
 		Platform='$(env.Platform)' />
@@ -61,11 +61,11 @@
 			<File Id='LICENSE' Name='LICENSE' DiskId='1' Source='../../LICENSE' Vital='yes' />
 
 			<RegistryKey   Root="HKLM" Key="Software\Classes\TurtleHub.Plugin" Action="createAndRemoveOnUninstall" />
-			<RegistryValue Root="HKLM" Key="Software\Classes\TurtleHub.Plugin" Value="TurtleHub $(var.MajorVersion).$(var.MinorVersion) (Github)" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\TurtleHub.Plugin" Value="TurtleHub $(var.MajorVersion).$(var.MinorVersion) (GitHub)" Type="string" />
 			<RegistryValue Root="HKLM" Key="Software\Classes\TurtleHub.Plugin\CLSID" Value="$(var.COMGuid)" Type="string" />
 
 			<RegistryKey   Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)" Action="createAndRemoveOnUninstall" />
-			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)" Value="TurtleHub $(var.MajorVersion).$(var.MinorVersion) (Github)" Type="string" />
+			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)" Value="TurtleHub $(var.MajorVersion).$(var.MinorVersion) (GitHub)" Type="string" />
 			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Value="mscoree.dll" Type="string" />
 			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Name="ThreadingModel" Value="Both" Type="string" />
 			<RegistryValue Root="HKLM" Key="Software\Classes\CLSID\$(var.COMGuid)\InProcServer32" Name="Class" Value="TurtleHub.Plugin" Type="string" />
@@ -87,8 +87,8 @@
 	</DirectoryRef>
 
 	<WixVariable Id="WixUILicenseRtf" Value="gpl-2.0.rtf" />
-	<WixVariable Id="WixUIBannerBmp" Value="Banner.jpg" />
-	<WixVariable Id="WixUIDialogBmp" Value="Dialog.jpg" />
+	<WixVariable Id="WixUIBannerBmp" Value="TurtleHub\Banner.jpg" />
+	<WixVariable Id="WixUIDialogBmp" Value="TurtleHub\Dialog.jpg" />
 	<Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" />
 	<UIRef Id="WixUI_InstallDir" />
 
