@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{CFF6CAA1-27A0-46FF-89D6-AD70F3575685}</ProjectGuid>
+    <ProjectGuid>{64AC7B45-E3CC-4C6B-A851-F3A0EEFD6E4D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TurtleHub</RootNamespace>
-    <AssemblyName>TurtleHub</AssemblyName>
+    <RootNamespace>TurtleLab</RootNamespace>
+    <AssemblyName>TurtleLab</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
@@ -87,13 +87,12 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ObjectListView, Version=2.9.1.1072, Culture=neutral, PublicKeyToken=b1c5bf581481bcd4, processorArchitecture=MSIL">
-      <HintPath>..\packages\ObjectListView.Official.2.9.1\lib\net20\ObjectListView.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="GitLabApiClient">
+      <HintPath>..\packages\GitLabApiClient.1.0.0-beta1\lib\netstandard2.0\GitLabApiClient.dll</HintPath>
     </Reference>
-    <Reference Include="Octokit, Version=0.29.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Octokit.0.29.0\lib\net45\Octokit.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
+    <Reference Include="ObjectListView">
+      <HintPath>..\packages\ObjectListView.Official.2.9.1\lib\net20\ObjectListView.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -112,42 +111,64 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GitHubIssueTracker.cs" />
-    <Compile Include="IBugTraqProvider.cs" />
-    <Compile Include="IBugTraqProvider2.cs" />
-    <Compile Include="IIssueTracker.cs" />
-    <Compile Include="IssueBrowserDialog.cs">
+    <Compile Include="..\TurtleHub\IBugTraqProvider.cs">
+      <Link>IBugTraqProvider.cs</Link>
+    </Compile>
+    <Compile Include="..\TurtleHub\IBugTraqProvider2.cs">
+      <Link>IBugTraqProvider2.cs</Link>
+    </Compile>
+    <Compile Include="..\TurtleHub\IIssueTracker.cs">
+      <Link>IIssueTracker.cs</Link>
+    </Compile>
+    <Compile Include="..\TurtleHub\IssueBrowserDialog.cs">
+      <Link>IssueBrowserDialog.cs</Link>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="IssueBrowserDialog.Designer.cs">
-      <DependentUpon>IssueBrowserDialog.cs</DependentUpon>
+    <Compile Include="..\TurtleHub\IssueBrowserDialog.Designer.cs">
+      <Link>IssueBrowserDialog.Designer.cs</Link>
     </Compile>
-    <Compile Include="Logger.cs" />
-    <Compile Include="OptionsDialog.cs">
+    <Compile Include="..\TurtleHub\Logger.cs">
+      <Link>Logger.cs</Link>
+    </Compile>
+    <Compile Include="..\TurtleHub\OptionsDialog.cs">
+      <Link>OptionsDialog.cs</Link>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OptionsDialog.Designer.cs">
-      <DependentUpon>OptionsDialog.cs</DependentUpon>
+    <Compile Include="..\TurtleHub\OptionsDialog.Designer.cs">
+      <Link>OptionsDialog.Designer.cs</Link>
     </Compile>
-    <Compile Include="Parameters.cs" />
-    <Compile Include="Plugin.cs" />
+    <Compile Include="..\TurtleHub\Parameters.cs">
+      <Link>Parameters.cs</Link>
+    </Compile>
+    <Compile Include="..\TurtleHub\Plugin.cs">
+      <Link>Plugin.cs</Link>
+    </Compile>
+    <Compile Include="..\TurtleHub\RepositoryMetrics.cs">
+      <Link>RepositoryMetrics.cs</Link>
+    </Compile>
+    <Compile Include="..\TurtleHub\TurtleIssue.cs">
+      <Link>TurtleIssue.cs</Link>
+    </Compile>
+    <Compile Include="..\TurtleHub\Utilities.cs">
+      <Link>Utilities.cs</Link>
+    </Compile>
+    <Compile Include="..\TurtleHub\WindowHandleWrapper.cs">
+      <Link>WindowHandleWrapper.cs</Link>
+    </Compile>
+    <Compile Include="GitLabIssueTracker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="RepositoryMetrics.cs" />
-    <Compile Include="TurtleIssue.cs" />
-    <Compile Include="Utilities.cs" />
-    <Compile Include="WindowHandleWrapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="IssueBrowserDialog.resx">
-      <DependentUpon>IssueBrowserDialog.cs</DependentUpon>
+    <EmbeddedResource Include="..\TurtleHub\IssueBrowserDialog.resx">
+      <Link>IssueBrowserDialog.resx</Link>
     </EmbeddedResource>
-    <EmbeddedResource Include="OptionsDialog.resx">
-      <DependentUpon>OptionsDialog.cs</DependentUpon>
+    <EmbeddedResource Include="..\TurtleHub\OptionsDialog.resx">
+      <Link>OptionsDialog.resx</Link>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -178,20 +199,20 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="Resources\TurtleHub.ico" />
+    <None Include="Resources\TurtleLab.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if "$(PlatformName)" == "x64" (
-  copy "$(TargetPath)" "C:\Program Files\Common Files\TurtleHub\$(TargetFileName)"
-  copy "$(ProjectDir)$(OutDir)$(TargetName).pdb" "C:\Program Files\Common Files\TurtleHub\$(TargetName).pdb"
-  copy "$(ProjectDir)$(OutDir)Octokit.dll" "C:\Program Files\Common Files\TurtleHub\Octokit.dll"
-  copy "$(ProjectDir)$(OutDir)ObjectListView.dll" "C:\Program Files\Common Files\TurtleHub\ObjectListView.dll"
+  copy "$(TargetPath)" "C:\Program Files\Common Files\TurtleLab\$(TargetFileName)"
+  copy "$(ProjectDir)$(OutDir)$(TargetName).pdb" "C:\Program Files\Common Files\TurtleLab\$(TargetName).pdb"
+  copy "$(ProjectDir)$(OutDir)GitLabApiClient.dll" "C:\Program Files\Common Files\TurtleLab\GitLabApiClient.dll"
+  copy "$(ProjectDir)$(OutDir)ObjectListView.dll" "C:\Program Files\Common Files\TurtleLab\ObjectListView.dll"
 ) else (
-  copy "$(TargetPath)" "C:\Program Files (x86)\Common Files\TurtleHub\$(TargetFileName)"
-  copy "$(ProjectDir)$(OutDir)$(TargetName).pdb" "C:\Program Files (x86)\Common Files\TurtleHub\$(TargetName).pdb"
-  copy "$(ProjectDir)$(OutDir)Octokit.dll" "C:\Program Files (x86)\Common Files\TurtleHub\Octokit.dll"
-  copy "$(ProjectDir)$(OutDir)ObjectListView.dll" "C:\Program Files (x86)\Common Files\TurtleHub\ObjectListView.dll"
+  copy "$(TargetPath)" "C:\Program Files (x86)\Common Files\TurtleLab\$(TargetFileName)"
+  copy "$(ProjectDir)$(OutDir)$(TargetName).pdb" "C:\Program Files (x86)\Common Files\TurtleLab\$(TargetName).pdb"
+  copy "$(ProjectDir)$(OutDir)GitLabApiClient.dll" "C:\Program Files (x86)\Common Files\TurtleLab\GitLabApiClient.dll"
+  copy "$(ProjectDir)$(OutDir)ObjectListView.dll" "C:\Program Files (x86)\Common Files\TurtleLab\ObjectListView.dll"
 )</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

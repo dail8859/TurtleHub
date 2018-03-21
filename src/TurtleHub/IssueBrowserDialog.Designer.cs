@@ -46,7 +46,6 @@ namespace TurtleHub
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.StatusStrip statusStrip;
             System.Windows.Forms.Label label1;
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -54,7 +53,6 @@ namespace TurtleHub
             this.BtnOk = new System.Windows.Forms.Button();
             this.BtnCancel = new System.Windows.Forms.Button();
             this.BtnReload = new System.Windows.Forms.Button();
-            this.updateNotifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.BtnShowGithub = new System.Windows.Forms.Button();
             this.TxtSearch = new System.Windows.Forms.TextBox();
             this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
@@ -142,14 +140,6 @@ namespace TurtleHub
             this.BtnReload.UseVisualStyleBackColor = true;
             this.BtnReload.Visible = false;
             this.BtnReload.Click += new System.EventHandler(this.BtnReload_Click);
-            // 
-            // updateNotifyIcon
-            // 
-            this.updateNotifyIcon.BalloonTipIcon = System.Windows.Forms.ToolTipIcon.Info;
-            this.updateNotifyIcon.BalloonTipText = "TurtleHub {0} is available for download!\r\n";
-            this.updateNotifyIcon.BalloonTipTitle = "TurtleHub Update";
-            this.updateNotifyIcon.Text = "TurtleHub Update Available";
-            this.updateNotifyIcon.BalloonTipClicked += new System.EventHandler(this.updateNotifyIcon_Click);
             // 
             // BtnShowGithub
             // 
@@ -276,7 +266,6 @@ namespace TurtleHub
         private System.Windows.Forms.Button BtnCancel;
         private System.Windows.Forms.Button BtnReload;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
-        private System.Windows.Forms.NotifyIcon updateNotifyIcon;
         private System.Windows.Forms.Button BtnShowGithub;
         private System.Windows.Forms.TextBox TxtSearch;
         private BrightIdeasSoftware.ObjectListView objectListView1;

@@ -16,7 +16,6 @@
 // along with this program; if not, write to the Free Software
 // Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 
-using Octokit;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -48,30 +47,6 @@ namespace TurtleHub
             }
 
             return null;
-        }
-
-        public static bool CheckCurrentCredentials(GitHubClient github)
-        {
-            try
-            {
-                // Try to make a rate limit check
-                var rateLimit = github.Miscellaneous.GetRateLimits();
-            }
-            catch (ApiException ex)
-            {
-                // Any GitHub ApiException
-                Logger.LogMessage(ex.ToString());
-                return false;
-            }
-            catch (Exception ex)
-            {
-                // Generic acception doesn't mean the credentials are invalid.
-                // Other reasons could cause this, e.g. no network connection
-                Logger.LogMessage(ex.ToString());
-                return true;
-            }
-
-            return true;
         }
     }
 }

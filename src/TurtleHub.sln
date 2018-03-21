@@ -5,6 +5,8 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TurtleHub", "TurtleHub\TurtleHub.csproj", "{CFF6CAA1-27A0-46FF-89D6-AD70F3575685}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TurtleLab", "TurtleLab\TurtleLab.csproj", "{64AC7B45-E3CC-4C6B-A851-F3A0EEFD6E4D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -22,6 +24,14 @@ Global
 		{CFF6CAA1-27A0-46FF-89D6-AD70F3575685}.Release|x64.Deploy.0 = Release|x64
 		{CFF6CAA1-27A0-46FF-89D6-AD70F3575685}.Release|x86.ActiveCfg = Release|x86
 		{CFF6CAA1-27A0-46FF-89D6-AD70F3575685}.Release|x86.Build.0 = Release|x86
+		{64AC7B45-E3CC-4C6B-A851-F3A0EEFD6E4D}.Debug|x64.ActiveCfg = Debug|x64
+		{64AC7B45-E3CC-4C6B-A851-F3A0EEFD6E4D}.Debug|x64.Build.0 = Debug|x64
+		{64AC7B45-E3CC-4C6B-A851-F3A0EEFD6E4D}.Debug|x86.ActiveCfg = Debug|x86
+		{64AC7B45-E3CC-4C6B-A851-F3A0EEFD6E4D}.Debug|x86.Build.0 = Debug|x86
+		{64AC7B45-E3CC-4C6B-A851-F3A0EEFD6E4D}.Release|x64.ActiveCfg = Release|x64
+		{64AC7B45-E3CC-4C6B-A851-F3A0EEFD6E4D}.Release|x64.Build.0 = Release|x64
+		{64AC7B45-E3CC-4C6B-A851-F3A0EEFD6E4D}.Release|x86.ActiveCfg = Release|x86
+		{64AC7B45-E3CC-4C6B-A851-F3A0EEFD6E4D}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

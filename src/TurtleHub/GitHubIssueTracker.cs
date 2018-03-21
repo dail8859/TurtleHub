@@ -4,9 +4,25 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 
 namespace TurtleHub
 {
+    [ComVisible(true)]
+#if WIN64
+    [Guid("B2C6EC0F-8742-4792-9FDC-10635D2C118B")]
+#else
+    [Guid("B2C6EC0F-8742-4792-9FDC-10635D2C118C")]
+#endif
+
+    public static class IssueTrackerFactory
+    {
+        public static IIssueTracker CreateIssueTracker(Parameters parameters)
+        {
+            return new GitHubIssueTracker(parameters);
+        }
+    }
+
     public class GitHubIssueTracker : IIssueTracker
     {
         Parameters parameters;
@@ -96,10 +112,10 @@ namespace TurtleHub
                 client.Credentials = new Credentials(token);
 #if DEBUG
                 // Make sure the API token is valid
-                if (Utilities.CheckCurrentCredentials(client) == false)
-                    throw new Exception("API Token is not valid");
-                else
-                    Logger.LogMessage("API Token is valid");
+                //if (Utilities.CheckCurrentCredentials(client) == false)
+                //    throw new Exception("API Token is not valid");
+                //else
+                //    Logger.LogMessage("API Token is valid");
 #endif
             }
             // else just use unauthenticated requests

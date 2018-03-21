@@ -25,12 +25,6 @@ using System.Linq;
 
 namespace TurtleHub
 {
-    [ComVisible(true)]
-#if WIN64
-    [Guid("B2C6EC0F-8742-4792-9FDC-10635D2C118B")]
-#else
-    [Guid("B2C6EC0F-8742-4792-9FDC-10635D2C118C")]
-#endif
     [ClassInterface(ClassInterfaceType.None)]
     public sealed class Plugin : IBugTraqProvider2
     {
@@ -171,14 +165,7 @@ namespace TurtleHub
                 // NOTE: since we are waiting on the task, an AggregateException is thrown instead of just an ApiExcpetion
                 foreach (Exception ex in aex.InnerExceptions)
                 {
-                    if(ex is Octokit.NotFoundException)
-                    {
-                        if (((Octokit.NotFoundException)ex).HttpResponse.StatusCode == HttpStatusCode.NotFound)
-                        {
-                            var res = MessageBox.Show("This repository cannot be found on the server. Continue anyways?", "TurtleHub", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation);
-                            return res == DialogResult.Yes;
-                        }
-                    }
+                    Logger.LogMessageWithData(ex.ToString());
                 }
 
                 // Some other exception happend. Silently fail, not a big deal

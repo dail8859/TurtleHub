@@ -32,7 +32,6 @@ namespace TurtleHub
     partial class IssueBrowserDialog : Form
     {
         private Parameters parameters;
-        private Octokit.Release latest_release;
         private IIssueTracker tracker;
         private TypedObjectListView<TurtleIssue> issuelistview;
 
@@ -41,10 +40,6 @@ namespace TurtleHub
             Logger.LogMessageWithData("IssueBrowserDialog()");
 
             InitializeComponent();
-
-            // Set the icons here instead of them being stored in the resource file multiple times
-            this.Icon = Properties.Resources.TurtleHub;
-            updateNotifyIcon.Icon = Properties.Resources.TurtleHub;
 
             this.parameters = parameters;
 
@@ -88,33 +83,6 @@ namespace TurtleHub
             }
         }
 
-        private async void CheckForUpdate()
-        {
-            // Only check if we haven't checked before
-            if (latest_release != null) return;
-
-            var client = new Octokit.GitHubClient(new Octokit.ProductHeaderValue("TurtleHub"));
-
-            // Check to see if there is an update for TurtleHub
-            Logger.LogMessageWithData("Checking for new TurtleHub release");
-            var latest = await client.Repository.Release.GetLatest("dail8859", "TurtleHub");
-            Logger.LogMessage("\tFound " + latest.TagName);
-
-            var thatVersion = Version.Parse(latest.TagName.Substring(1)); // remove the v from e.g. v0.1.1
-            var thisVersion = typeof(Plugin).Assembly.GetName().Version;
-
-            Logger.LogMessage("\tThis " + thisVersion.ToString());
-            Logger.LogMessage("\tThat " + thatVersion.ToString());
-            if (thatVersion > thisVersion)
-            {
-                updateNotifyIcon.BalloonTipText = string.Format(updateNotifyIcon.BalloonTipText, latest.TagName);
-                updateNotifyIcon.Visible = true;
-                updateNotifyIcon.ShowBalloonTip(15 * 1000);
-            }
-
-            latest_release = latest;
-        }
-
         public IList<TurtleIssue> IssuesFixed { get { return issuelistview.CheckedObjects; } }
 
         private void ShowIssues()
@@ -156,36 +124,6 @@ namespace TurtleHub
             var issue = issuelistview.SelectedObject;
             Logger.LogMessageWithData("Opening " + issue.HtmlUrl);
             Process.Start(issue.HtmlUrl);
-        }
-
-        private void updateNotifyIcon_Click(object sender, EventArgs e)
-        {
-            Debug.Assert(latest_release != null);
-
-            var thatVersion = Version.Parse(latest_release.TagName.Substring(1)); // remove the v from e.g. v0.1.1
-            var thisVersion = typeof(Plugin).Assembly.GetName().Version;
-
-            var message = new StringBuilder()
-                    .AppendLine("There is a new version of TurtleHub available. Would you like to update now?")
-                    .AppendLine()
-                    .Append("Your version: ").Append(thisVersion).AppendLine()
-                    .Append("New version: ").Append(thatVersion).AppendLine()
-                    .ToString();
-
-            var reply = MessageBox.Show(this, message,
-                "Update Notice", MessageBoxButtons.YesNoCancel,
-                MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-
-            if (reply == DialogResult.Cancel)
-                return;
-
-            if (reply == DialogResult.Yes)
-            {
-                Process.Start(latest_release.HtmlUrl);
-                Close();
-            }
-
-            updateNotifyIcon.Visible = false;
         }
 
         private void objectListView1_SelectionChanged(object sender, EventArgs e)
