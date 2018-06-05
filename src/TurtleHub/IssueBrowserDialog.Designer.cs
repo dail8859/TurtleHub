@@ -53,7 +53,7 @@ namespace TurtleHub
             this.BtnOk = new System.Windows.Forms.Button();
             this.BtnCancel = new System.Windows.Forms.Button();
             this.BtnReload = new System.Windows.Forms.Button();
-            this.BtnShowGithub = new System.Windows.Forms.Button();
+            this.BtnShowOnTracker = new System.Windows.Forms.Button();
             this.TxtSearch = new System.Windows.Forms.TextBox();
             this.objectListView1 = new BrightIdeasSoftware.ObjectListView();
             this.olvColumn1 = ((BrightIdeasSoftware.OLVColumn)(new BrightIdeasSoftware.OLVColumn()));
@@ -141,17 +141,17 @@ namespace TurtleHub
             this.BtnReload.Visible = false;
             this.BtnReload.Click += new System.EventHandler(this.BtnReload_Click);
             // 
-            // BtnShowGithub
+            // BtnShowOnTracker
             // 
-            this.BtnShowGithub.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.BtnShowGithub.Enabled = false;
-            this.BtnShowGithub.Location = new System.Drawing.Point(12, 432);
-            this.BtnShowGithub.Name = "BtnShowGithub";
-            this.BtnShowGithub.Size = new System.Drawing.Size(96, 22);
-            this.BtnShowGithub.TabIndex = 2;
-            this.BtnShowGithub.Text = "Show on Github";
-            this.BtnShowGithub.UseVisualStyleBackColor = true;
-            this.BtnShowGithub.Click += new System.EventHandler(this.BtnShowGithub_Click);
+            this.BtnShowOnTracker.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.BtnShowOnTracker.Enabled = false;
+            this.BtnShowOnTracker.Location = new System.Drawing.Point(12, 432);
+            this.BtnShowOnTracker.Name = "BtnShowOnTracker";
+            this.BtnShowOnTracker.Size = new System.Drawing.Size(96, 22);
+            this.BtnShowOnTracker.TabIndex = 2;
+            this.BtnShowOnTracker.Text = "Show on {0}";
+            this.BtnShowOnTracker.UseVisualStyleBackColor = true;
+            this.BtnShowOnTracker.Click += new System.EventHandler(this.BtnShowOnTracker_Click);
             // 
             // TxtSearch
             // 
@@ -240,7 +240,7 @@ namespace TurtleHub
             this.Controls.Add(this.objectListView1);
             this.Controls.Add(this.TxtSearch);
             this.Controls.Add(label1);
-            this.Controls.Add(this.BtnShowGithub);
+            this.Controls.Add(this.BtnShowOnTracker);
             this.Controls.Add(statusStrip);
             this.Controls.Add(this.BtnReload);
             this.Controls.Add(this.BtnCancel);
@@ -266,7 +266,7 @@ namespace TurtleHub
         private System.Windows.Forms.Button BtnCancel;
         private System.Windows.Forms.Button BtnReload;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
-        private System.Windows.Forms.Button BtnShowGithub;
+        private System.Windows.Forms.Button BtnShowOnTracker;
         private System.Windows.Forms.TextBox TxtSearch;
         private BrightIdeasSoftware.ObjectListView objectListView1;
         private BrightIdeasSoftware.OLVColumn olvColumn1;

@@ -29,7 +29,8 @@ namespace TurtleHub
         public static void LogMessage(string message)
         {
 #if DEBUG
-            using (StreamWriter w = File.AppendText(@"TurtleHub.log"))
+            String fname = IssueTrackerFactory.GetIssueTrackerName();
+            using (StreamWriter w = File.AppendText(fname))
             {
                 w.WriteLine(message);
             }

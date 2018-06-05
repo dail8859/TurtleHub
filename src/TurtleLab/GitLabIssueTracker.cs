@@ -39,6 +39,11 @@ namespace TurtleHub
         {
             return new GitLabIssueTracker(parameters);
         }
+
+        public static String GetIssueTrackerName()
+        {
+            return "GitLab";
+        }
     }
 
     public class GitLabIssueTracker : IIssueTracker
@@ -49,7 +54,7 @@ namespace TurtleHub
         public GitLabIssueTracker(Parameters parameters)
         {
             this.parameters = parameters;
-            client = new GitLabClient(parameters.Tracker, parameters.APIToken);
+            client = new GitLabClient(parameters.Url, parameters.APIToken);
         }
 
         public async Task<IReadOnlyList<TurtleIssue>> GetAllIssuesOnRepository()

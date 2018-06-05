@@ -21,6 +21,11 @@ namespace TurtleHub
         {
             return new GitHubIssueTracker(parameters);
         }
+
+        public static String GetIssueTrackerName()
+        {
+            return "GitHub";
+        }
     }
 
     public class GitHubIssueTracker : IIssueTracker

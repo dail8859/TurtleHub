@@ -30,7 +30,6 @@ namespace TurtleHub
             get
             {
                 Parameters p = new Parameters();
-                p.Tracker = CmbTracker.Text ?? String.Empty;
                 p.Owner = TxtOwner.Text;
                 p.Repository = TxtRepository.Text;
                 p.Keyword = CmbKeyword.Text;
@@ -46,14 +45,6 @@ namespace TurtleHub
             InitializeComponent();
 
             int idx = 0;
-            if (!String.IsNullOrEmpty(parameters.Tracker))
-            {
-                idx = CmbTracker.FindString(parameters.Tracker);
-                if (idx == -1)
-                {
-                    idx = CmbTracker.Items.Add(parameters.Tracker);
-                }
-            }
             CmbTracker.SelectedIndex = idx;
 
             TxtOwner.Text = parameters.Owner;

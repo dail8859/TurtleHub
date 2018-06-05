@@ -24,10 +24,10 @@ namespace TurtleHub
 {
     public class Parameters : Dictionary<string, string>
     {
-        public string Tracker
+        public string Url
         {
-            get { return this.ContainsKey("tracker") ? this["tracker"] : ""; }
-            set { this["tracker"] = value; }
+            get { return this.ContainsKey("url") ? this["url"] : ""; }
+            set { this["url"] = value; }
         }
 
         public string Owner

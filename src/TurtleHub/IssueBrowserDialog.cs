@@ -46,6 +46,7 @@ namespace TurtleHub
             checkBoxShowPrs.Checked = parameters.ShowPrsByDefault;
 
             Text = string.Format(Text, parameters.Repository);
+            BtnShowOnTracker.Text = string.Format(BtnShowOnTracker.Text, IssueTrackerFactory.GetIssueTrackerName());
 
             // Wrap the objectlistview and set the aspects appropriately
             issuelistview = new TypedObjectListView<TurtleIssue>(this.objectListView1);
@@ -119,7 +120,7 @@ namespace TurtleHub
             ShowIssues();
         }
 
-        private void BtnShowGithub_Click(object sender, EventArgs e)
+        private void BtnShowOnTracker_Click(object sender, EventArgs e)
         {
             var issue = issuelistview.SelectedObject;
             Logger.LogMessageWithData("Opening " + issue.HtmlUrl);
@@ -128,7 +129,7 @@ namespace TurtleHub
 
         private void objectListView1_SelectionChanged(object sender, EventArgs e)
         {
-            BtnShowGithub.Enabled = objectListView1.SelectedObject != null;
+            BtnShowOnTracker.Enabled = objectListView1.SelectedObject != null;
         }
 
         private void ShowErrorMessage(string error)
